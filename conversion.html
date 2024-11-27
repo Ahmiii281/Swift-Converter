@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Swift Converter - File Conversion</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="CSS/style.css">
+    <style>
+        /* Default light mode styles */
+        body {
+            background-color: white;
+            color: black;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* Dark mode styles */
+        body.dark-mode {
+            background-color: #121212;
+            color: #e0e0e0;
+        }
+
+        button,
+        input[type="file"] {
+            background-color: #56ab2f;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 10px 0;
+            cursor: pointer;
+        }
+
+        body.dark-mode button,
+        body.dark-mode input[type="file"] {
+            background-color: #333;
+            color: white;
+        }
+
+        /* Navigation bar styling */
+        .navbar {
+            background-color: #4CAF50;
+            overflow: hidden;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px 0;
+        }
+
+        .navbar ul {
+            list-style-type: none;
+            display: flex;
+            padding: 0;
+            margin: 0;
+        }
+
+        .navbar ul li {
+            margin: 0 15px;
+        }
+
+        .navbar ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            text-transform: uppercase;
+        }
+
+        .navbar ul li a:hover {
+            background-color: #575757;
+            border-radius: 4px;
+            padding: 8px 16px;
+        }
+
+        .output-container {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-top: 10px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        #progress {
+            display: none;
+            font-size: 16px;
+            margin-top: 10px;
+            color: #333;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Swift Converter - File Conversion</h1>
+
+    <nav class="navbar">
+        <ul>
+            <li><a href="#image-to-text-section">Image to Text</a></li>
+            <li><a href="#pdf-to-word-section">PDF to Word</a></li>
+        </ul>
+        <span id="themeToggleIcon" class="theme-icon" onclick="toggleTheme()">
+            <i class="fas fa-moon"></i> <!-- Change to a sun/moon icon for toggling -->
+        </span>
+    </nav>
+
+    <!-- Image to Text Conversion Area -->
+    <section id="image-to-text-section">
+        <h3>Convert Image to Text:</h3>
+        <input type="file" id="imageUpload" accept="image/*">
+        <button onclick="convertImage()">Extract Text</button>
+        <div id="progress">Processing... Please wait.</div>
+        <h3>Extracted Text:</h3>
+        <div id="output" class="output-container"></div>
+    </section>
+
+    <!-- PDF to Word Section -->
+    <section id="pdf-to-word-section">
+        <h3>Convert PDF to Word</h3>
+        <div class="conversion-container">
+            <input type="file" id="pdfUpload" accept="application/pdf">
+            <button onclick="convertPdfToWord()">Convert PDF to Word</button>
+            <a id="downloadLink" href="#" style="display:none;" download="converted.docx">Download Word Document</a>
+            <div id="pdfOutput" class="output-container"></div>
+        </div>
+    </section>
+
+    <!-- Script dependencies -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/docx/7.3.0/docx.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js"></script>
+    <script>
+        // Toggle between light and dark themes
+        function toggleTheme() {
+            document.body.classList.toggle("dark-mode");
+            const icon = document.getElementById("themeToggleIcon").querySelector("i");
+            icon.classList.toggle("fa-moon");
+            icon.classList.toggle("fa-sun");
+        }
+
+        // Function to convert image to text
+        function convertImage() {
+            const imageFile = document.getElementById('imageUpload').files[0];
+            const outputElement = document.getElementById('output');
+            const progressElement = document.getElementById('progress');
+
+            if (!imageFile) {
+                alert("Please upload an image first.");
+                return;
+            }
+
+            // Reset output and show progress spinner
+            outputElement.innerText = "";
+            progressElement.style.display = "block";
+
+            const reader = new FileReader();
+            reader.onload = () => {
+                Tesseract.recognize(
+                    reader.result,
+                    'eng',
+                    {
+                        logger: (progress) => {
+                            console.log(progress);
+                            if (progress.status === 'recognizing text') {
+                                progressElement.innerText = `Recognizing text: ${Math.round(progress.progress * 100)}% complete`;
+                            }
+                        }
+                    }
+                ).then(({ data: { text } }) => {
+                    progressElement.style.display = "none";
+                    if (text.trim()) {
+                        outputElement.innerText = text;
+                    } else {
+                        outputElement.innerText = "No text found in the image.";
+                    }
+                }).catch((err) => {
+                    progressElement.style.display = "none";
+                    console.error(err);
+                    outputElement.innerText = "Error extracting text. Please try again.";
+                });
+            };
+
+            reader.onerror = () => {
+                progressElement.style.display = "none";
+                console.error("Error reading file.");
+                outputElement.innerText = "Failed to process the image. Please try again.";
+            };
+
+            reader.readAsDataURL(imageFile);
+        }
+    </script>
+
+</body>
+
+</html>
