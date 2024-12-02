@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Swift Converter: Convert files quickly and easily, including image to text, PDF to Word, and more.">
+    <title>Swift Converter</title>
+
+    <!-- Icons and Stylesheets -->
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="CSS/style.css">
+    <link rel="manifest" href="/manifest.json">
+
+    <!-- Inline Styles -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color, #ffffff);
+            color: var(--text-color, #000000);
+            transition: background-color 0.5s, color 0.5s;
+        }
+
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        section {
+            padding: 50px;
+            text-align: center;
+        }
+
+        .cta {
+            background-color: #f0f0f0;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 30px auto;
+            width: 60%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .button:hover {
+            background-color: #4CAF50;
+        }
+
+        footer {
+            background-color: #333;
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .dark-mode {
+            --bg-color: #2c2c2c;
+            --text-color: #f0f0f0;
+        }
+
+        .theme-toggle-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.5em;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+
+        body.dark-mode .theme-toggle-btn {
+            color: #f1f1f1;
+        }
+        
+        .navbar {
+            background-color:#4CAF50;
+            overflow: hidden;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px 0;
+        }
+
+        .navbar ul {
+            list-style-type: none;
+            display: flex;
+            padding: 0;
+            margin: 0;
+        }
+
+        .navbar ul li {
+            margin: 0 15px;
+        }
+
+        .navbar ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            text-transform: uppercase;
+        }
+
+        .navbar ul li a:hover {
+            background-color:#4CAF50;
+            border-radius: 4px;
+            padding: 8px 16px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header Section -->
+    <header>
+        <h1>Welcome to Swift Converter</h1>
+        <p>Convert Anything, Anytime</p>
+        <button id="themeToggle">
+            <i id="themeIcon" class="bi bi-brightness-high-fill"></i>
+        </button>
+    </header>
+    <!--Navigation bar-->
+    <nav class="navbar">
+        <ul>
+            <li><a href="./imagetotext.html">Image to Text</a></li>
+            <li><a href="./pdftoword.html">PDF to Word</a></li>
+        </ul>
+        <span id="themeToggleIcon" class="theme-icon" onclick="toggleTheme()">
+            <i class="fas fa-moon"></i>
+        </span>
+    </nav>
+
+    <!-- Main Section -->
+    <section>
+        <h2>Fast and Reliable File Conversions</h2>
+        <p>We support a variety of conversions to make your life easier.</p>
+
+        <!-- Call to Action -->
+        <div class="cta">
+            <h3>Get Started with Your Conversions</h3>
+            <button class="button" onclick="startConversion()" title="Start Conversion">Upload File & Convert</button>
+        </div>
+    </section>
+
+    <!-- Footer Section -->
+    <footer>
+        <p>© 2024 Swift Converter. All Rights Reserved.</p>
+    </footer>
+
+    <!-- Scripts -->
+     <script src="../JS/theme.js"></script>
+    <script>
+        function startConversion() {
+            window.location.href = "imagetotext.html"; // Adjust to the desired page
+        }
+    </script>
+</body>
+</html>

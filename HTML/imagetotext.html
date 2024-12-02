@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>Swift Converter - Image to Text</title>
+    <style>
+        body {
+            background-color: white;
+            color: black;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body.dark-mode {
+            background-color: #121212;
+            color: #e0e0e0;
+        }
+
+        button, input[type="file"] {
+            background-color: #56ab2f;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 10px 0;
+            cursor: pointer;
+        }
+
+        body.dark-mode button, body.dark-mode input[type="file"] {
+            background-color: #333;
+            color: white;
+        }
+
+        .output-container {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-top: 10px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        #progressBar {
+            width: 0%; 
+            height: 20px; 
+            background-color: #4caf50; 
+            border-radius: 5px; 
+            text-align: center; 
+            color: white;
+        }
+        #progressContainer {
+            display: none; 
+            width: 100%; 
+            background-color: #e0e0e0; 
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Swift Converter - Image to Text</h1>
+    <header>
+        <button id="themeToggle">
+            <i id="themeIcon" class="fas fa-moon"></i>
+        </button>
+    </header>
+    <section id="image-to-text-section">
+        <h3>Convert Image to Text:</h3>
+        <label for="imageUpload">Upload an Image:</label>
+        <input type="file" id="imageUpload" accept="image/*" title="Select an image file">
+        <button id="convertImageButton" onclick="convertImage()">Extract Text</button>
+        <div id="progressContainer"> 
+            <div id="progressBar">0%</div>
+        </div>        
+        <h3>Extracted Text:</h3>
+        <div id="output" class="output-container"></div>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@2.1.1/dist/tesseract.min.js"></script>
+    <script src="../JS/imagetotext.js"></script>
+</body>
+</html>

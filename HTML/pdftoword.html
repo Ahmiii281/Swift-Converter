@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Swift Converter - PDF to Word</title>
+    <link rel="stylesheet" href="../CSS/style.css">
+    <style>
+        body {
+            background-color: white;
+            color: black;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        #downloadLink {
+            display: none;
+        }
+        body.dark-mode {
+            background-color: #121212;
+            color: #e0e0e0;
+        }
+
+        button, input[type="file"] {
+            background-color: #56ab2f;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 10px 0;
+            cursor: pointer;
+        }
+
+        body.dark-mode button, body.dark-mode input[type="file"] {
+            background-color: #333;
+            color: white;
+        }
+
+        .output-container {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-top: 10px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+<body>
+    <h1>Swift Converter - PDF to Word</h1>
+    <header>
+        <button id="themeToggle">
+            <i id="themeIcon" class="fas fa-moon"></i>
+        </button>
+    </header>
+    <section id="pdf-to-word-section">
+        <h3>Convert PDF to Word:</h3>
+        <label for="pdfUpload">Upload a PDF:</label>
+        <input type="file" id="pdfUpload" accept="application/pdf" title="Select a PDF file">
+        <button id="convertPdfButton" onclick="convertPdfToWord()">Convert PDF to Word</button>
+        <a id="downloadLink" href="#" download="converted.docx">Download Word Document</a>
+        <div id="pdfOutput" class="output-container"></div>
+    </section>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/docx/9.0.3/docx.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/docx@9.1.0/build/index.umd.min.js"></script>
+    <script src="../JS/pdftoword.js"></script>
+    <script src="../JS/theme.js"></script>
+</body>
+</html>
