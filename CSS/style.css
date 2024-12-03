@@ -38,19 +38,23 @@ body {
     text-decoration: underline;
 }
 
+
+/* Theme Toggle Button */
 .theme-toggle {
     background: none;
     border: none;
     color: white;
     font-size: 22px;
     cursor: pointer;
+    position: absolute; /* Make it float */
+    top: 15px;          /* Adjust distance from top */
+    right: 20px;        /* Adjust distance from right */
     transition: transform 0.2s ease;
 }
 
 .theme-toggle:hover {
     transform: rotate(20deg);
 }
-
 /* Main Content */
 main {
     padding: 30px;
