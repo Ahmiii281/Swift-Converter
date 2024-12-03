@@ -33,14 +33,14 @@ Make sure you have a modern web browser (e.g., Chrome, Firefox) installed to vie
 ### Steps
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/swift-converter.git
+   git clone https://github.com/Ahmiii281/swift-converter.git
    cd swift-converter
    ```
 
 2. Open the project in your preferred code editor.
 
 3. Launch the website:
-   - Open `index.html` or `conversion.html` in your web browser.
+   - Open `../HTML/index.html` in your web browser.
 
 ## How to Use
 
@@ -62,23 +62,6 @@ Make sure you have a modern web browser (e.g., Chrome, Firefox) installed to vie
 - **File Upload Issues**: Check browser permissions for file access.
 - **Content Security Policy Errors**: Avoid inline JavaScript and ensure all scripts are referenced externally.
 
-## Folder Structure
-
-```
-Swift Converter/
-│
-├── CSS/
-│   └── style.css          # Stylesheet for the website
-│
-├── JS/
-│   ├── main.js            # Main JavaScript logic for conversion features
-│   ├── tesseract.min.js   # Tesseract.js library for OCR
-│
-├── index.html             # Main homepage
-├── conversion.html        # File conversion page
-├── README.md              # Project documentation
-```
-
 ## Contribution
 
 Contributions are welcome! If you'd like to improve the project, please follow these steps:
@@ -97,16 +80,13 @@ Contributions are welcome! If you'd like to improve the project, please follow t
    ```
 5. Submit a pull request.
 
-## License
-
-This project is licensed under the [MIT License](LICENSE).
-
 ## Contact
 
 If you have any questions or suggestions, feel free to contact me:
 
 - **Name**: Bilal Ahmed  
-- **Email**: ba341914@gmail.com  
+- **Email**: ba341914@gmail.com
+- **Number**: +923187584281
 - **GitHub**: https://github.com/Ahmiii281
 
 ---
