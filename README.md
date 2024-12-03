@@ -1,6 +1,6 @@
 # Swift Converter
 
-Swift Converter is a web application designed to simplify file conversion processes, including **image-to-text extraction** and **PDF-to-Word conversion**. With a user-friendly interface, it supports fast and efficient file handling, making it ideal for users seeking reliable conversion tools.
+Swift Converter is a web application designed to simplify file conversion processes, including **image-to-text extraction** , **PDF-to-Word conversion** and **PPTX-to-PDF conversion**. With a user-friendly interface, it supports fast and efficient file handling, making it ideal for users seeking reliable conversion tools.
 
 ## Features
 
@@ -9,6 +9,9 @@ Swift Converter is a web application designed to simplify file conversion proces
 
 - **PDF to Word Conversion**  
   Convert PDF files into editable Word documents.
+
+- **PPTX-to-PDF conversion**
+  Convert PowerPoint presentations into PDF format for easier sharing and collaboration.
 
 - **Dark Mode Support**  
   Toggle between light and dark themes using a modern icon-based switcher.
@@ -28,7 +31,7 @@ Swift Converter is a web application designed to simplify file conversion proces
 ## Installation and Setup
 
 ### Prerequisites
-Make sure you have a modern web browser (e.g., Chrome, Firefox) installed to view the project.
+Make sure you have a modern web browser (e.g., Chrome, Microsoft Edge, Firefox) installed to view the project.
 
 ### Steps
 1. Clone the repository:
@@ -40,7 +43,7 @@ Make sure you have a modern web browser (e.g., Chrome, Firefox) installed to vie
 2. Open the project in your preferred code editor.
 
 3. Launch the website:
-   - Open `../HTML/index.html` in your web browser.
+   - Open `./HTML/index.html` in your web browser.
 
 ## How to Use
 
@@ -55,6 +58,12 @@ Make sure you have a modern web browser (e.g., Chrome, Firefox) installed to vie
 2. Upload a PDF file using the **Choose File** button.
 3. Click **Convert PDF to Word**.
 4. Download the generated Word file by clicking the **Download Word Document** link.
+
+### PPTX to PDF Conversion
+1. Navigate to the **PPTX to PDF** section.
+2. Upload a PPTX file using the **Choose File** button.
+3. Click **Convert PPTX TO PDF**.
+4. Download the generated PDF file by clicking the **Download PDF Document** link.
 
 ## Troubleshooting
 
