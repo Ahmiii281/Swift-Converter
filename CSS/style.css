@@ -126,6 +126,7 @@ input[type="file"]:hover {
     border-radius: 10px;
     overflow: hidden;
     margin-top: 15px;
+    display: none;
 }
 
 #progressBar {
@@ -137,6 +138,9 @@ input[type="file"]:hover {
     line-height: 25px;
     border-radius: 10px;
     transition: width 0.4s ease;
+}
+#downloadLink {
+    display: none;
 }
 
 /* Footer */
