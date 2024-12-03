@@ -53,11 +53,11 @@ body {
     font-size: 22px;
     cursor: pointer;
     margin-left: auto; /* Push it to the right */
-    transition: transform 0.2s ease;
+    transition: transform 0.5s ease;
 }
 
 .theme-toggle:hover {
-    transform: rotate(20deg);
+    transform: rotate(180deg);
 }
 
 /* Main Content */
