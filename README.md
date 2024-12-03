@@ -95,7 +95,7 @@ If you have any questions or suggestions, feel free to contact me:
 
 - **Name**: Bilal Ahmed  
 - **Email**: ba341914@gmail.com
-- **Number**: +923187584281
+- **WhatsApp**: [+923187584281](https://wa.me/923187584281)
 - **GitHub**: https://github.com/Ahmiii281
 
 ---
