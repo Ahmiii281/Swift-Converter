@@ -115,6 +115,14 @@ class ThemeManager {
     }
 }
 
+// Initialize theme immediately to prevent flash of wrong theme
+(function() {
+    const savedTheme = localStorage.getItem('theme');
+    const systemTheme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    const initialTheme = savedTheme || systemTheme;
+    document.documentElement.setAttribute('data-theme', initialTheme);
+})();
+
 // Initialize theme manager when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     window.themeManager = new ThemeManager();
@@ -126,16 +134,17 @@ function toggleTheme() {
         window.themeManager.toggleTheme();
     } else {
         console.warn('ThemeManager not initialized. Using fallback method.');
-        document.body.classList.toggle('dark-mode');
-        const isDarkMode = document.body.classList.contains('dark-mode');
-        localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
         
         const themeIcon = document.getElementById('themeIcon');
         if (themeIcon) {
-            themeIcon.classList.replace(
-                isDarkMode ? 'bi-brightness-high-fill' : 'bi-moon-fill',
-                isDarkMode ? 'bi-moon-fill' : 'bi-brightness-high-fill'
-            );
+            const iconClass = newTheme === 'dark' ? 'bi-sun-fill' : 'bi-moon-fill';
+            const currentClass = newTheme === 'dark' ? 'bi-moon-fill' : 'bi-sun-fill';
+            themeIcon.classList.remove(currentClass);
+            themeIcon.classList.add(iconClass);
         }
     }
 }
@@ -151,14 +160,16 @@ function loadTheme() {
     const themeIcon = document.getElementById('themeIcon');
     
     if (savedTheme === 'dark') {
-        document.body.classList.add('dark-mode');
+        document.documentElement.setAttribute('data-theme', 'dark');
         if (themeIcon) {
-            themeIcon.classList.replace('bi-brightness-high-fill', 'bi-moon-fill');
+            themeIcon.classList.remove('bi-moon-fill');
+            themeIcon.classList.add('bi-sun-fill');
         }
     } else {
-        document.body.classList.remove('dark-mode');
+        document.documentElement.setAttribute('data-theme', 'light');
         if (themeIcon) {
-            themeIcon.classList.replace('bi-moon-fill', 'bi-brightness-high-fill');
+            themeIcon.classList.remove('bi-sun-fill');
+            themeIcon.classList.add('bi-moon-fill');
         }
     }
 }
