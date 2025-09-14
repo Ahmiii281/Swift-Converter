@@ -1,37 +1,179 @@
-// Dark Mode Toggle
-function toggleTheme() {
-    // Toggle dark mode class on the body
-    document.body.classList.toggle('dark-mode');
+// Enhanced Theme Management System
+class ThemeManager {
+    constructor() {
+        this.currentTheme = this.getStoredTheme() || this.getSystemTheme();
+        this.themeToggle = document.getElementById('themeToggle');
+        this.themeIcon = document.getElementById('themeIcon');
+        
+        this.initializeTheme();
+        this.setupEventListeners();
+    }
 
-    // Check if dark mode is enabled and store preference in localStorage
-    const isDarkMode = document.body.classList.contains('dark-mode');
-    localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
-    themeIcon.classList.replace(
-        isDarkMode ? 'bi-brightness-high-fill' : 'bi-moon-fill',
-        isDarkMode ? 'bi-moon-fill' : 'bi-brightness-high-fill'
-    );
-}
+    getStoredTheme() {
+        try {
+            return localStorage.getItem('theme');
+        } catch (error) {
+            console.warn('Unable to access localStorage:', error);
+            return null;
+        }
+    }
 
-// Function to load the theme based on localStorage
-function loadTheme() {
-    const savedTheme = localStorage.getItem('theme');
+    getSystemTheme() {
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            return 'dark';
+        }
+        return 'light';
+    }
 
-    // If there's a saved theme, apply it
-    if (savedTheme === 'dark') {
-        document.body.classList.add('dark-mode');
-        themeIcon.classList.replace('bi-brightness-high-fill', 'bi-moon-fill');
-    } else {
-        document.body.classList.remove('dark-mode');
-        themeIcon.classList.replace('bi-moon-fill', 'bi-brightness-high-fill');
+    initializeTheme() {
+        this.applyTheme(this.currentTheme);
+        this.updateThemeIcon();
+    }
+
+    applyTheme(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        this.currentTheme = theme;
+        this.storeTheme(theme);
+    }
+
+    storeTheme(theme) {
+        try {
+            localStorage.setItem('theme', theme);
+        } catch (error) {
+            console.warn('Unable to store theme preference:', error);
+        }
+    }
+
+    updateThemeIcon() {
+        if (!this.themeIcon) return;
+        
+        const iconClass = this.currentTheme === 'dark' ? 'bi-sun-fill' : 'bi-moon-fill';
+        const currentClass = this.currentTheme === 'dark' ? 'bi-moon-fill' : 'bi-sun-fill';
+        
+        this.themeIcon.classList.remove(currentClass);
+        this.themeIcon.classList.add(iconClass);
+    }
+
+    toggleTheme() {
+        const newTheme = this.currentTheme === 'dark' ? 'light' : 'dark';
+        this.applyTheme(newTheme);
+        this.updateThemeIcon();
+        
+        // Add animation effect
+        this.animateThemeChange();
+    }
+
+    animateThemeChange() {
+        if (this.themeToggle) {
+            this.themeToggle.style.transform = 'rotate(180deg)';
+            setTimeout(() => {
+                this.themeToggle.style.transform = 'rotate(0deg)';
+            }, 300);
+        }
+    }
+
+    setupEventListeners() {
+        if (this.themeToggle) {
+            this.themeToggle.addEventListener('click', () => this.toggleTheme());
+        }
+
+        // Listen for system theme changes
+        if (window.matchMedia) {
+            const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+            mediaQuery.addEventListener('change', (e) => {
+                // Only update if user hasn't manually set a preference
+                if (!this.getStoredTheme()) {
+                    const systemTheme = e.matches ? 'dark' : 'light';
+                    this.applyTheme(systemTheme);
+                    this.updateThemeIcon();
+                }
+            });
+        }
+
+        // Keyboard accessibility
+        if (this.themeToggle) {
+            this.themeToggle.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    this.toggleTheme();
+                }
+            });
+        }
+    }
+
+    // Public method to get current theme
+    getCurrentTheme() {
+        return this.currentTheme;
+    }
+
+    // Public method to set theme programmatically
+    setTheme(theme) {
+        if (theme === 'dark' || theme === 'light') {
+            this.applyTheme(theme);
+            this.updateThemeIcon();
+        }
     }
 }
 
-// Initialize theme on page load
-window.onload = function () {
-    loadTheme();
-};
+// Initialize theme manager when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    window.themeManager = new ThemeManager();
+});
 
-// Add event listener to the theme toggle button
-const themeToggleBtn = document.getElementById('themeToggle');
-const themeIcon = document.getElementById('themeIcon');
-themeToggleBtn.addEventListener('click', toggleTheme);
+// Legacy functions for backward compatibility
+function toggleTheme() {
+    if (window.themeManager) {
+        window.themeManager.toggleTheme();
+    } else {
+        console.warn('ThemeManager not initialized. Using fallback method.');
+        document.body.classList.toggle('dark-mode');
+        const isDarkMode = document.body.classList.contains('dark-mode');
+        localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+        
+        const themeIcon = document.getElementById('themeIcon');
+        if (themeIcon) {
+            themeIcon.classList.replace(
+                isDarkMode ? 'bi-brightness-high-fill' : 'bi-moon-fill',
+                isDarkMode ? 'bi-moon-fill' : 'bi-brightness-high-fill'
+            );
+        }
+    }
+}
+
+function loadTheme() {
+    if (window.themeManager) {
+        // ThemeManager handles this automatically
+        return;
+    }
+    
+    console.warn('ThemeManager not initialized. Using fallback method.');
+    const savedTheme = localStorage.getItem('theme');
+    const themeIcon = document.getElementById('themeIcon');
+    
+    if (savedTheme === 'dark') {
+        document.body.classList.add('dark-mode');
+        if (themeIcon) {
+            themeIcon.classList.replace('bi-brightness-high-fill', 'bi-moon-fill');
+        }
+    } else {
+        document.body.classList.remove('dark-mode');
+        if (themeIcon) {
+            themeIcon.classList.replace('bi-moon-fill', 'bi-brightness-high-fill');
+        }
+    }
+}
+
+// Initialize theme on page load (fallback)
+window.addEventListener('load', () => {
+    if (!window.themeManager) {
+        loadTheme();
+    }
+});
+
+// Add event listener to theme toggle button (fallback)
+document.addEventListener('DOMContentLoaded', () => {
+    const themeToggleBtn = document.getElementById('themeToggle');
+    if (themeToggleBtn && !window.themeManager) {
+        themeToggleBtn.addEventListener('click', toggleTheme);
+    }
+});

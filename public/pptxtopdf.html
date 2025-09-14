@@ -3,64 +3,146 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta name="description" content="Swift Converter: Convert files quickly and easily, including image to text, PDF to Word, and more.">
-	<title>Swift Converter - PPTX to PDF</title>
-
-	<!-- Icons and Stylesheets -->
-	<link rel="icon" href="images/favicon.ico" type="image/x-icon">
-	<link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet">
+	<meta name="description" content="Convert PowerPoint presentations to PDF format. Transform PPTX files into professional PDF documents for easy sharing.">
+	<meta name="keywords" content="PPTX to PDF, PowerPoint converter, presentation converter, PDF conversion">
+	
+	<!-- Preconnect to external domains for performance -->
+	<link rel="preconnect" href="https://cdnjs.cloudflare.com">
+	<link rel="preconnect" href="https://cdn.jsdelivr.net">
+	
+	<!-- Fonts -->
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+	
+	<!-- Stylesheets -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
 	<link rel="stylesheet" href="style.css">
+	
+	<!-- Icons and Manifest -->
+	<link rel="icon" href="/images/favicon.ico" type="image/x-icon">
+	<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
 	<link rel="manifest" href="/manifest.json">
+	
+	<title>PPTX to PDF Converter - Swift Converter</title>
 </head>
 
 <body>
+	<!-- Skip to main content for accessibility -->
+	<a href="#main-content" class="skip-link">Skip to main content</a>
+	
 	<!-- Header Section -->
-	<header class="navbar">
-		<a href="./index.html" class="logo">Swift Converter</a> <!-- Logo -->
-		<button id="themeToggle" class="theme-toggle" title="Toggle Theme">
-			<i id="themeIcon" class="bi bi-moon-fill"></i>
-		</button>
+	<header class="navbar" role="banner">
+		<div class="navbar-container">
+			<a href="./index.html" class="logo" aria-label="Swift Converter - Home">
+				<i class="fas fa-bolt" aria-hidden="true"></i>
+				Swift Converter
+			</a>
+			<nav class="navbar-nav" role="navigation" aria-label="Main navigation">
+				<ul class="nav-list">
+					<li><a href="./imagetotext.html" class="nav-link">Image to Text</a></li>
+					<li><a href="./pdftoword.html" class="nav-link">PDF to Word</a></li>
+					<li><a href="./pptxtopdf.html" class="nav-link" aria-current="page">PPTX to PDF</a></li>
+				</ul>
+			</nav>
+			<button id="themeToggle" class="theme-toggle" title="Toggle Theme" aria-label="Toggle dark mode">
+				<i id="themeIcon" class="bi bi-moon-fill" aria-hidden="true"></i>
+			</button>
+		</div>
 	</header>
 
-	<!-- Navigation Bar -->
-	<nav class="navbar">
-		<ul>
-			<li><a href="./imagetotext.html">Image to Text</a></li>
-			<li><a href="./pdftoword.html">PDF to Word</a></li>
-			<li><a href="./pptxtopdf.html">PPTX to PDF</a></li>
-		</ul>
-	</nav>
-
 	<!-- Main Section -->
-	<main>
-		<section>
-			<h2>Convert Your PPTX Files to PDF</h2>
-			<p>Effortlessly transform your PowerPoint presentations into high-quality PDF documents.</p>
-		</section>
+	<main id="main-content" role="main">
+		<div class="container">
+			<!-- Page Header -->
+			<section class="card" style="margin-top: var(--space-8);">
+				<div class="card-header text-center">
+					<h1 class="card-title">
+						<i class="fas fa-file-powerpoint" aria-hidden="true"></i>
+						PPTX to PDF Converter
+					</h1>
+					<p class="card-description">
+						Transform PowerPoint presentations into professional PDF documents. Perfect for sharing presentations without requiring PowerPoint software.
+					</p>
+				</div>
+			</section>
 
-		<!-- PPTX to PDF Conversion Section -->
-		<section id="pptx-to-pdf-section" class="converter-section">
-			<h3>Convert PPTX to PDF</h3>
-			<label for="pptxUpload">Upload a PPTX File:</label>
-			<input type="file" id="pptxUpload" accept=".pptx" title="Select a PPTX file">
-			<button id="convertPptxButton" onclick="convertPptxToPdf()">Convert PPTX to PDF</button>
-			<div id="progressContainer">
-				<div id="progressBar">0%</div>
-			</div>
-			<a id="downloadLink" href="#" download="converted.pdf">Download PDF Document</a>
-			<div id="pdfOutput" class="output-container"></div>
-		</section>
+			<!-- Conversion Section -->
+			<section class="card" aria-labelledby="conversion-title">
+				<h2 id="conversion-title" class="card-title">Upload Your Presentation</h2>
+				
+				<div class="form-group">
+					<label for="pptxUpload" class="form-label">Select a PPTX file</label>
+					<div class="file-input">
+						<input type="file" id="pptxUpload" accept=".pptx" title="Select a PPTX file" aria-describedby="pptx-help">
+						<label for="pptxUpload" class="file-input-label">
+							<i class="fas fa-cloud-upload-alt" aria-hidden="true"></i>
+							<span>Choose PPTX File</span>
+						</label>
+					</div>
+					<small id="pptx-help" class="text-muted">
+						Supported format: PPTX. Max size: 50MB
+					</small>
+				</div>
+
+				<button id="convertPptxButton" class="btn btn-primary btn-lg" onclick="convertPptxToPdf()" disabled>
+					<i class="fas fa-file-pdf" aria-hidden="true"></i>
+					Convert to PDF
+				</button>
+
+				<div id="progressContainer" class="progress-container" role="progressbar" aria-label="Conversion progress">
+					<div id="progressBar" class="progress-bar"></div>
+				</div>
+
+				<div id="statusMessage" class="mt-4" aria-live="polite" aria-atomic="true"></div>
+			</section>
+
+			<!-- Output Section -->
+			<section class="card" aria-labelledby="output-title">
+				<h2 id="output-title" class="card-title">Conversion Result</h2>
+				<div id="pdfOutput" class="output-container" aria-label="Conversion status">
+					<p class="text-center text-muted">Upload a PPTX file to start the conversion process.</p>
+				</div>
+				<div class="mt-4">
+					<a id="downloadLink" href="#" download="converted.pdf" class="btn btn-primary" style="display: none;">
+						<i class="fas fa-download" aria-hidden="true"></i>
+						Download PDF Document
+					</a>
+				</div>
+			</section>
+		</div>
 	</main>
 
 	<!-- Footer Section -->
-	<footer>
-		<p>© 2024 Swift Converter. All Rights Reserved.</p>
+	<footer class="footer" role="contentinfo">
+		<div class="footer-content">
+			<div class="footer-section">
+				<h3>Swift Converter</h3>
+				<p>Your trusted partner for fast and secure file conversions.</p>
+			</div>
+			<div class="footer-section">
+				<h4>Tools</h4>
+				<ul>
+					<li><a href="./imagetotext.html">Image to Text</a></li>
+					<li><a href="./pdftoword.html">PDF to Word</a></li>
+					<li><a href="./pptxtopdf.html">PPTX to PDF</a></li>
+				</ul>
+			</div>
+			<div class="footer-section">
+				<h4>Legal</h4>
+				<ul>
+					<li><a href="./Docs/privacy-policy.html">Privacy Policy</a></li>
+					<li><a href="./Docs/terms-of-services.html">Terms of Service</a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="footer-bottom">
+			<p>&copy; 2025 Swift Converter. All Rights Reserved.</p>
+		</div>
 	</footer>
 
 	<!-- Scripts -->
-	<!-- CloudConvert SDK -->
-	<script src="https://unpkg.com/cloudconvert/dist/cloudconvert.browser.js"></script>
 	<script src="../JS/pptxtopdf.js"></script>
 	<script src="../JS/theme.js"></script>
 </body>
