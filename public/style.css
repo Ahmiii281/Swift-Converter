@@ -229,6 +229,7 @@ a:hover {
   position: sticky;
   top: 0;
   z-index: var(--z-sticky);
+  -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
   background: rgba(255, 255, 255, 0.8);
 }
@@ -309,7 +310,6 @@ a:hover {
   cursor: pointer;
   text-decoration: none;
   transition: all var(--transition-fast);
-  user-select: none;
   white-space: nowrap;
 }
 
@@ -394,6 +394,10 @@ a:hover {
   box-shadow: var(--shadow-sm);
   padding: var(--space-6);
   transition: all var(--transition-normal);
+}
+
+.page-header {
+  margin-top: var(--space-8);
 }
 
 [data-theme="dark"] .card {
@@ -804,6 +808,9 @@ a:hover {
 
 .hidden { display: none; }
 .visible { display: block; }
+
+/* Download link hidden state */
+.download-hidden { display: none; }
 
 .loading {
   opacity: 0.6;
