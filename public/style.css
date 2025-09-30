@@ -29,21 +29,21 @@ body {
    CSS Custom Properties (Variables)
    ================================ */
 :root {
-  /* Color Palette - Professional Blue Theme */
-  --color-primary: #2563eb;
-  --color-primary-light: #3b82f6;
-  --color-primary-dark: #1d4ed8;
-  --color-primary-50: #eff6ff;
-  --color-primary-100: #dbeafe;
-  --color-primary-500: #3b82f6;
-  --color-primary-600: #2563eb;
-  --color-primary-700: #1d4ed8;
-  --color-primary-900: #1e3a8a;
-  
-  --color-accent: #f59e0b;
-  --color-accent-light: #fbbf24;
-  --color-accent-dark: #d97706;
-  
+  /* Color Palette - Modern Indigo + Cyan */
+  --color-primary: #6366f1; /* indigo-500 */
+  --color-primary-light: #8b5cf6; /* lighter accent */
+  --color-primary-dark: #4f46e5; /* indigo-600 */
+  --color-primary-50: #eef2ff;
+  --color-primary-100: #e0e7ff;
+  --color-primary-500: #6366f1;
+  --color-primary-600: #4f46e5;
+  --color-primary-700: #4338ca;
+  --color-primary-900: #312e81;
+
+  --color-accent: #06b6d4; /* cyan */
+  --color-accent-light: #ecfeff;
+  --color-accent-dark: #0891b2;
+
   --color-success: #10b981;
   --color-warning: #f59e0b;
   --color-error: #ef4444;
@@ -248,6 +248,39 @@ a:hover {
   gap: var(--space-6);
 }
 
+/* Mobile navigation toggle (hamburger) */
+.nav-toggle {
+  display: none;
+  background: none;
+  border: 1px solid var(--color-border);
+  padding: var(--space-2);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  color: var(--color-text-secondary);
+  font-size: 1.25rem;
+}
+
+.nav-toggle:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--color-primary-50);
+}
+
+/* When the navbar container has .open, show the nav-list on small screens */
+.navbar-container.open .nav-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  width: 100%;
+}
+
+.navbar-container.open .nav-list .nav-link {
+  width: 100%;
+  display: block;
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-bg-secondary);
+  border-radius: var(--radius-md);
+}
+
 .logo {
   display: flex;
   align-items: center;
@@ -428,7 +461,7 @@ a:hover {
    Hero Section
    ================================ */
 .hero-section {
-  background: linear-gradient(135deg, var(--color-primary-50) 0%, var(--color-white) 100%);
+  background: linear-gradient(135deg, var(--color-primary-50) 0%, rgba(6,182,212,0.06) 60%);
   border: none;
   box-shadow: var(--shadow-lg);
   margin: var(--space-8) auto;
@@ -437,7 +470,7 @@ a:hover {
 }
 
 [data-theme="dark"] .hero-section {
-  background: linear-gradient(135deg, var(--color-primary-900) 0%, var(--color-gray-800) 100%);
+  background: linear-gradient(135deg, rgba(49,46,129,0.9) 0%, rgba(6,182,212,0.04) 60%);
 }
 
 .hero-content {
@@ -530,17 +563,17 @@ a:hover {
   width: 80px;
   height: 80px;
   margin: 0 auto var(--space-6);
-  background: var(--color-primary-50);
+  background: linear-gradient(135deg, var(--color-primary-50), var(--color-accent-light));
   border-radius: var(--radius-2xl);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: var(--font-size-3xl);
-  color: var(--color-primary);
+  color: var(--color-primary-dark);
 }
 
 [data-theme="dark"] .tool-icon {
-  background: var(--color-primary-900);
+  background: linear-gradient(135deg, rgba(49,46,129,0.12), rgba(6,182,212,0.02));
 }
 
 .tool-card h3 {
@@ -976,6 +1009,78 @@ a:hover {
   border-color: var(--color-success);
 }
 
+/* QR page specific helpers to match site styling */
+.text-input,
+.form-textarea {
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  font-size: var(--font-size-base);
+  background: var(--color-white);
+  color: var(--color-text);
+  transition: all var(--transition-fast);
+  resize: vertical;
+  min-height: 96px;
+}
+
+[data-theme="dark"] .text-input,
+[data-theme="dark"] .form-textarea {
+  background: var(--color-gray-800);
+}
+
+.text-input:focus,
+.form-textarea:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-50);
+}
+
+/* neo-btn kept for backward compatibility with QR page markup */
+.neo-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-6);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  line-height: 1;
+  border: none;
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  text-decoration: none;
+  transition: all var(--transition-fast);
+  background: var(--color-primary);
+  color: var(--color-white);
+  box-shadow: var(--shadow-sm);
+}
+
+.neo-btn:hover:not(:disabled) {
+  background: var(--color-primary-dark);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+.neo-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* QR preview container */
+#qrcode {
+  display: inline-block;
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
+}
+
+[data-theme="dark"] #qrcode {
+  background: var(--color-gray-800);
+}
+
 /* ================================
    Enhanced Button Styles
    ================================ */
@@ -1349,4 +1454,83 @@ a:hover {
     background: white;
     border: 1px solid #ccc;
   }
+}
+
+/* ================================
+   Micro-interactions & Motion
+   ================================ */
+/* Respect user preference for reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.card, .tool-card {
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
+  will-change: transform, box-shadow;
+}
+.card:hover, .tool-card:hover {
+  transform: translateY(-6px) scale(1.01);
+  box-shadow: var(--shadow-2xl);
+}
+
+.tool-card:active, .card:active {
+  transform: translateY(-2px) scale(0.997);
+}
+
+.tool-icon {
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+.tool-icon:hover {
+  transform: translateY(-6px) rotate(-6deg) scale(1.04);
+  box-shadow: var(--shadow-lg);
+}
+
+.btn, .neo-btn, .nav-link {
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast), color var(--transition-fast);
+}
+.btn:hover, .neo-btn:hover, .nav-link:hover {
+  transform: translateY(-2px);
+}
+.btn:active, .neo-btn:active {
+  transform: translateY(0) scale(0.995);
+}
+
+/* subtle focus ring for keyboard users */
+.btn:focus, .neo-btn:focus, .nav-link:focus, .nav-toggle:focus {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(99,102,241,0.12);
+}
+
+/* ================================
+   Alternate Palettes
+   ================================ */
+/* EyeCare palette - softer, low-blue-light tint */
+[data-palette="eyecare"] {
+  --color-primary: #4db6a3; /* muted teal */
+  --color-primary-light: #79d4c2;
+  --color-primary-dark: #3a8f7b;
+  --color-primary-50: #f0fbf8;
+  --color-accent: #cfeee9;
+  --color-accent-light: #f7fffe;
+  --color-accent-dark: #a6e6db;
+  --color-bg: #fbfdfc;
+  --color-text: #0f1720;
+}
+
+/* Warm Light palette - friendly & sunny */
+[data-palette="warm-light"] {
+  --color-primary: #fb923c; /* warm orange */
+  --color-primary-light: #fcd34d;
+  --color-primary-dark: #f97316;
+  --color-primary-50: #fff7ed;
+  --color-accent: #fde68a;
+  --color-accent-light: #fffaf0;
+  --color-accent-dark: #fbbf24;
+  --color-bg: #ffffff;
+  --color-text: #1f2937;
 }

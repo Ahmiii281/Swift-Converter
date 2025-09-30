@@ -3,8 +3,8 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta name="description" content="Swift Converter - Fast and reliable file conversions including Image to Text, PDF to Word, and PPTX to PDF. Convert your files quickly and securely.">
-	<meta name="keywords" content="file converter, image to text, PDF to Word, PPTX to PDF, OCR, document conversion">
+	<meta name="description" content="Swift Converter - Fast and reliable file conversions including Image to Text, PDF to Word, QR Code Generator and PPTX to PDF. Convert your files quickly and securely.">
+	<meta name="keywords" content="file converter, image to text, PDF to Word, PPTX to PDF, QR Code Generator, OCR, document conversion">
 	<meta name="author" content="Swift Converter">
 	<meta name="robots" content="index, follow">
 	
@@ -46,7 +46,6 @@
 	<title>Swift Converter - Fast & Reliable File Conversions</title>
 </head>
 
-
 <body>
 	<!-- Skip to main content for accessibility -->
 	<a href="#main-content" class="skip-link">Skip to main content</a>
@@ -59,10 +58,14 @@
 				Swift Converter
 			</a>
 			<nav class="navbar-nav" role="navigation" aria-label="Main navigation">
-				<ul class="nav-list">
+				<button class="nav-toggle" aria-expanded="false" aria-controls="primary-navigation" aria-label="Toggle navigation">
+					<i class="fas fa-bars" aria-hidden="true"></i>
+				</button>
+				<ul id="primary-navigation" class="nav-list">
 					<li><a href="./imagetotext.html" class="nav-link">Image to Text</a></li>
 					<li><a href="./pdftoword.html" class="nav-link">PDF to Word</a></li>
 					<li><a href="./pptxtopdf.html" class="nav-link">PPTX to PDF</a></li>
+					<li><a href="./qrgenerator.html" class="nav-link">QR Generator</a></li>
 				</ul>
 			</nav>
 			<button id="themeToggle" class="theme-toggle" title="Toggle Theme" aria-label="Toggle dark mode">
@@ -108,6 +111,19 @@
 					<a href="./imagetotext.html" class="tool-link" aria-label="Convert image to text">
 						<i class="fas fa-arrow-right" aria-hidden="true"></i>
 						Start Converting
+					</a>
+				</div>
+				
+				<!-- QR Generator Tool Card -->
+				<div class="tool-card" role="article">
+					<div class="tool-icon">
+						<i class="fas fa-qrcode" aria-hidden="true"></i>
+					</div>
+					<h3>QR Generator</h3>
+					<p>Create QR codes from text, URLs, or any content and download them as images.</p>
+					<a href="./qrgenerator.html" class="tool-link" aria-label="Open QR Code Generator">
+						<i class="fas fa-arrow-right" aria-hidden="true"></i>
+						Open QR Generator
 					</a>
 				</div>
 				
@@ -194,5 +210,7 @@
 	</footer>
 	
 	<!-- Scripts -->
+	<script src="../JS/palette.js"></script>
+	<script src="../JS/nav.js"></script>
 </body>
 </html>

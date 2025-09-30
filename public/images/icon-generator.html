@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Icon Generator</title>
+    <style>
+        body { margin: 0; padding: 20px; background: #f0f0f0; }
+        .icon-container { display: inline-block; margin: 10px; }
+        .icon { 
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            border-radius: 20%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            position: relative;
+        }
+        .icon-72 { width: 72px; height: 72px; font-size: 24px; }
+        .icon-96 { width: 96px; height: 96px; font-size: 32px; }
+        .icon-128 { width: 128px; height: 128px; font-size: 42px; }
+        .icon-144 { width: 144px; height: 144px; font-size: 48px; }
+        .icon-152 { width: 152px; height: 152px; font-size: 50px; }
+        .icon-192 { width: 192px; height: 192px; font-size: 64px; }
+        .icon-384 { width: 384px; height: 384px; font-size: 128px; }
+        .icon-512 { width: 512px; height: 512px; font-size: 170px; }
+        
+        .icon::before {
+            content: "⚡";
+            position: absolute;
+            top: 20%;
+            left: 20%;
+        }
+        .icon::after {
+            content: "📄";
+            position: absolute;
+            bottom: 20%;
+            right: 20%;
+            font-size: 0.6em;
+        }
+        
+        .instructions {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="instructions">
+        <h1>Swift Converter Icon Generator</h1>
+        <p>Right-click on each icon below and "Save image as" to create the required PNG files:</p>
+        <ol>
+            <li>Save icon-72x72.png</li>
+            <li>Save icon-96x96.png</li>
+            <li>Save icon-128x128.png</li>
+            <li>Save icon-144x144.png</li>
+            <li>Save icon-152x152.png</li>
+            <li>Save icon-192x192.png</li>
+            <li>Save icon-384x384.png</li>
+            <li>Save icon-512x512.png</li>
+        </ol>
+    </div>
+    
+    <div class="icon-container">
+        <div class="icon icon-72" id="icon72"></div>
+        <div>72x72</div>
+    </div>
+    
+    <div class="icon-container">
+        <div class="icon icon-96" id="icon96"></div>
+        <div>96x96</div>
+    </div>
+    
+    <div class="icon-container">
+        <div class="icon icon-128" id="icon128"></div>
+        <div>128x128</div>
+    </div>
+    
+    <div class="icon-container">
+        <div class="icon icon-144" id="icon144"></div>
+        <div>144x144</div>
+    </div>
+    
+    <div class="icon-container">
+        <div class="icon icon-152" id="icon152"></div>
+        <div>152x152</div>
+    </div>
+    
+    <div class="icon-container">
+        <div class="icon icon-192" id="icon192"></div>
+        <div>192x192</div>
+    </div>
+    
+    <div class="icon-container">
+        <div class="icon icon-384" id="icon384"></div>
+        <div>384x384</div>
+    </div>
+    
+    <div class="icon-container">
+        <div class="icon icon-512" id="icon512"></div>
+        <div>512x512</div>
+    </div>
+    
+    <script>
+        // Convert divs to canvas and allow download
+        function createIcon(size, id) {
+            const canvas = document.createElement('canvas');
+            canvas.width = size;
+            canvas.height = size;
+            const ctx = canvas.getContext('2d');
+            
+            // Create gradient
+            const gradient = ctx.createLinearGradient(0, 0, size, size);
+            gradient.addColorStop(0, '#2563eb');
+            gradient.addColorStop(1, '#1d4ed8');
+            
+            // Draw background
+            ctx.fillStyle = gradient;
+            ctx.beginPath();
+            ctx.roundRect(0, 0, size, size, size * 0.2);
+            ctx.fill();
+            
+            // Draw lightning bolt
+            ctx.fillStyle = 'white';
+            ctx.font = `${size * 0.3}px Arial`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('⚡', size * 0.3, size * 0.4);
+            
+            // Draw document
+            ctx.font = `${size * 0.15}px Arial`;
+            ctx.fillText('📄', size * 0.7, size * 0.7);
+            
+            // Add download link
+            canvas.toBlob(function(blob) {
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.download = `icon-${size}x${size}.png`;
+                link.href = url;
+                link.textContent = `Download ${size}x${size}`;
+                link.style.display = 'block';
+                link.style.marginTop = '10px';
+                document.getElementById(id).parentNode.appendChild(link);
+            });
+        }
+        
+        // Generate all icons
+        [72, 96, 128, 144, 152, 192, 384, 512].forEach(size => {
+            createIcon(size, `icon${size}`);
+        });
+    </script>
+</body>
+</html>
+

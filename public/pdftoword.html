@@ -42,10 +42,14 @@
 				Swift Converter
 			</a>
 			<nav class="navbar-nav" role="navigation" aria-label="Main navigation">
-				<ul class="nav-list">
+				<button class="nav-toggle" aria-expanded="false" aria-controls="primary-navigation" aria-label="Toggle navigation">
+					<i class="fas fa-bars" aria-hidden="true"></i>
+				</button>
+				<ul id="primary-navigation" class="nav-list">
 					<li><a href="./imagetotext.html" class="nav-link">Image to Text</a></li>
 					<li><a href="./pdftoword.html" class="nav-link" aria-current="page">PDF to Word</a></li>
 					<li><a href="./pptxtopdf.html" class="nav-link">PPTX to PDF</a></li>
+					<li><a href="./qrgenerator.html" class="nav-link">QR Generator</a></li>
 				</ul>
 			</nav>
 			<button id="themeToggle" class="theme-toggle" title="Toggle Theme" aria-label="Toggle dark mode">
@@ -148,5 +152,7 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.min.js"></script>
 	<script src="../JS/pdftoword.js"></script>
+	<script src="../JS/palette.js"></script>
+	<script src="../JS/nav.js"></script>
 </body>
 </html>
