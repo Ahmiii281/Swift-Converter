@@ -114,6 +114,18 @@
           "sizes": "96x96"
         }
       ]
+    },
+    {
+      "name": "URL Shortener",
+      "short_name": "Shorten URL",
+      "description": "Create short, manageable links",
+      "url": "/urlshortener.html",
+      "icons": [
+        {
+          "src": "/images/shortcut-link.png",
+          "sizes": "96x96"
+        }
+      ]
     }
   ],
   "related_applications": [],

@@ -3,39 +3,32 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta name="description" content="Convert PowerPoint presentations to PDF format. Transform PPTX files into professional PDF documents for easy sharing.">
-	<meta name="keywords" content="PPTX to PDF, PowerPoint converter, presentation converter, PDF conversion">
+	<meta name="description" content="Swift Converter - Free URL Shortener. Quickly transform long URLs into short, manageable links.">
+	<meta name="keywords" content="URL shortener, short link, link shortener, shorten url, swift converter">
 	
-	<!-- Preconnect to external domains for performance -->
 	<link rel="preconnect" href="https://cdnjs.cloudflare.com">
 	<link rel="preconnect" href="https://cdn.jsdelivr.net">
-	
-	<!-- Fonts -->
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 	
-	<!-- Stylesheets -->
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer">
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+	
 	<link rel="stylesheet" href="style.css">
 	
-	<!-- Icons and Manifest -->
 	<link rel="icon" href="/images/favicon.ico" type="image/x-icon">
 	<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
 	<link rel="manifest" href="/manifest.json">
 	
-	<!-- Theme Script - Load early to prevent flash -->
 	<script src="../JS/theme.js"></script>
 	
-	<title>PPTX to PDF Converter - Swift Converter</title>
+	<title>URL Shortener - Swift Converter</title>
 </head>
 
 <body>
-	<!-- Skip to main content for accessibility -->
 	<a href="#main-content" class="skip-link">Skip to main content</a>
 	
-	<!-- Header Section -->
 	<header class="navbar" role="banner">
 		<div class="navbar-container">
 			<a href="./index.html" class="logo" aria-label="Swift Converter - Home">
@@ -49,9 +42,9 @@
 				<ul id="primary-navigation" class="nav-list">
 					<li><a href="./imagetotext.html" class="nav-link">Image to Text</a></li>
 					<li><a href="./pdftoword.html" class="nav-link">PDF to Word</a></li>
-					<li><a href="./pptxtopdf.html" class="nav-link" aria-current="page">PPTX to PDF</a></li>
+					<li><a href="./pptxtopdf.html" class="nav-link">PPTX to PDF</a></li>
 					<li><a href="./qrgenerator.html" class="nav-link">QR Generator</a></li>
-					<li><a href="./urlshortener.html" class="nav-link">URL Shortener</a></li>
+					<li><a href="./urlshortener.html" class="nav-link" aria-current="page">URL Shortener</a></li>
 				</ul>
 			</nav>
 			<button id="themeToggle" class="theme-toggle" title="Toggle Theme" aria-label="Toggle dark mode">
@@ -60,69 +53,58 @@
 		</div>
 	</header>
 
-	<!-- Main Section -->
 	<main id="main-content" role="main">
 		<div class="container">
-			<!-- Page Header -->
 			<section class="card page-header">
 				<div class="card-header text-center">
 					<h1 class="card-title">
-						<i class="fas fa-file-powerpoint" aria-hidden="true"></i>
-						PPTX to PDF Converter
+						<i class="fas fa-link" aria-hidden="true"></i>
+						URL Shortener
 					</h1>
 					<p class="card-description">
-						Transform PowerPoint presentations into professional PDF documents. Perfect for sharing presentations without requiring PowerPoint software.
+						Transform long and messy URLs into short, clean, and memorable links for sharing.
 					</p>
 				</div>
 			</section>
 
-			<!-- Conversion Section -->
-			<section class="card" aria-labelledby="conversion-title">
-				<h2 id="conversion-title" class="card-title">Upload Your Presentation</h2>
+			<section class="card" aria-labelledby="shortener-title">
+				<h2 id="shortener-title" class="card-title">Enter Your Long URL</h2>
 				
 				<div class="form-group">
-					<label for="pptxUpload" class="form-label">Select a PPTX file</label>
-					<div class="file-input">
-						<input type="file" id="pptxUpload" accept=".pptx" title="Select a PPTX file" aria-describedby="pptx-help">
-						<label for="pptxUpload" class="file-input-label">
-							<i class="fas fa-cloud-upload-alt" aria-hidden="true"></i>
-							<span>Choose PPTX File</span>
-						</label>
-					</div>
-					<small id="pptx-help" class="text-muted">
-						Supported format: PPTX. Max size: 50MB
+					<label for="longUrlInput" class="form-label">Paste Link Here</label>
+					<textarea id="longUrlInput" rows="3" placeholder="e.g., https://very.long.website.com/article?id=12345&source=twitter" class="form-input text-input"></textarea>
+					<small id="url-help" class="text-muted">
+						Ensure the URL includes 'http://' or 'https://'.
 					</small>
 				</div>
 
-				<button id="convertPptxButton" class="btn btn-primary btn-lg" disabled>
-					<i class="fas fa-file-pdf" aria-hidden="true"></i>
-					Convert to PDF
+				<button id="shortenUrlButton" class="btn btn-primary btn-lg">
+					<i class="fas fa-cut" aria-hidden="true"></i>
+					Shorten URL
 				</button>
-
-				<div id="progressContainer" class="progress-container" role="progressbar" aria-label="Conversion progress">
-					<div id="progressBar" class="progress-bar"></div>
-				</div>
 
 				<div id="statusMessage" class="mt-4" aria-live="polite" aria-atomic="true"></div>
 			</section>
 
-			<!-- Output Section -->
 			<section class="card" aria-labelledby="output-title">
-				<h2 id="output-title" class="card-title">Conversion Result</h2>
-				<div id="pdfOutput" class="output-container" aria-label="Conversion status">
-					<p class="text-center text-muted">Upload a PPTX file to start the conversion process.</p>
+				<h2 id="output-title" class="card-title">Short Link Result</h2>
+				<div id="outputArea" class="output-container" aria-label="Shortened URL">
+					<p class="text-center text-muted">Enter a URL above to generate a short link.</p>
 				</div>
-				<div class="mt-4">
-					<a id="downloadLink" href="#" download="converted.pdf" class="btn btn-primary download-hidden">
-						<i class="fas fa-download" aria-hidden="true"></i>
-						Download PDF Document
+				<div class="mt-4" style="display: flex; gap: var(--space-4);">
+					<button id="copyButton" class="btn btn-secondary" disabled>
+						<i class="fas fa-copy" aria-hidden="true"></i>
+						Copy Short Link
+					</button>
+					<a id="testLink" href="#" target="_blank" class="btn btn-secondary" disabled>
+						<i class="fas fa-external-link-alt" aria-hidden="true"></i>
+						Test Link
 					</a>
 				</div>
 			</section>
 		</div>
 	</main>
-
-	<!-- Footer Section -->
+	
 	<footer class="footer" role="contentinfo">
 		<div class="footer-content">
 			<div class="footer-section">
@@ -151,10 +133,8 @@
 			<p>&copy; 2025 Swift Converter. All Rights Reserved.</p>
 		</div>
 	</footer>
-
-	<!-- Scripts -->
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-	<script src="../JS/pptxtopdf.js"></script>
+	
+	<script src="../JS/urlshortener.js"></script>
 	<script src="../JS/palette.js"></script>
 	<script src="../JS/nav.js"></script>
 </body>

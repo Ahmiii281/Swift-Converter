@@ -10,6 +10,7 @@ This is a lightweight static web app offering multiple utilities with a clean, r
 - **PDF to Word**: Convert PDF files to editable `.docx`
 - **PPTX to PDF**: Turn PowerPoint presentations into PDFs
 - **QR Code Generator**: Generate and download QR codes
+- **URL Shortener**: Transform long links into short, shareable URLs
 - **Privacy-first**: Processing happens locally in the browser
 - **Responsive and Accessible**: WCAG-friendly, keyboard navigable
 - **Theme Support**: Automatic dark/light mode with manual toggle
@@ -22,6 +23,7 @@ This is a lightweight static web app offering multiple utilities with a clean, r
 - `public/pdftoword.html` — PDF to Word
 - `public/pptxtopdf.html` — PPTX to PDF
 - `public/qrgenerator.html` — QR Code Generator
+- `public/urlshortener.html` — URL Shortener
 - Legal: `Docs/privacy-policy.html`, `Docs/terms-of-services.html`
 
 ## Getting started (local)
@@ -46,6 +48,7 @@ Swift-Converter/
 │  ├─ pdftoword.html
 │  ├─ pptxtopdf.html
 │  ├─ qrgenerator.html
+│  ├─ urlshortener.html
 │  ├─ images/
 │  └─ style.css
 ├─ JS/
@@ -53,6 +56,7 @@ Swift-Converter/
 │  ├─ pdftoword.js
 │  ├─ pptxtopdf.js
 │  ├─ qr-generator.js
+│  ├─ urlshortener.js
 │  ├─ nav.js
 │  ├─ theme.js
 │  ├─ palette.js
