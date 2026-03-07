@@ -1,4 +1,4 @@
-// PPTX to PDF Converter - Enhanced Version
+// PPTX to PDF Converter - Advanced Version using JSZip and jsPDF
 class PptxToPdfConverter {
     constructor() {
         this.initializeElements();
@@ -36,7 +36,7 @@ class PptxToPdfConverter {
             'application/vnd.openxmlformats-officedocument.presentationml.presentation',
             'application/vnd.ms-powerpoint'
         ];
-        
+
         if (!allowedTypes.includes(file.type) && !file.name.toLowerCase().endsWith('.pptx')) {
             this.showError('Please select a valid PPTX file.');
             this.resetForm();
@@ -64,7 +64,7 @@ class PptxToPdfConverter {
 
     async convertPptxToPdf() {
         const pptxFile = this.pptxUpload.files[0];
-        
+
         if (!pptxFile) {
             this.showError('Please select a PPTX file first.');
             return;
@@ -72,12 +72,10 @@ class PptxToPdfConverter {
 
         try {
             this.setLoadingState(true);
-            this.showProgress(10, 'Preparing conversion...');
-            
-            // For now, we'll use a simple approach that converts the PPTX to a basic PDF
-            // In a production environment, you would use a service like CloudConvert or similar
+            this.showProgress(10, 'Reading PPTX file...');
+
             await this.performConversion(pptxFile);
-            
+
         } catch (error) {
             this.handleError(error);
         }
@@ -85,159 +83,126 @@ class PptxToPdfConverter {
 
     async performConversion(file) {
         try {
-            this.showProgress(20, 'Reading presentation file...');
-            
-            // Use a more practical approach - convert PPTX to images first, then to PDF
-            await this.convertPptxToImages(file);
-            
-        } catch (error) {
-            throw new Error('Conversion failed: ' + error.message);
-        }
-    }
-
-    async convertPptxToImages(file) {
-        try {
-            this.showProgress(30, 'Analyzing presentation structure...');
-            
-            // For now, we'll create a simple PDF with instructions
-            // In a real implementation, you would use libraries like mammoth.js or similar
-            await this.delay(1000);
-            
-            this.showProgress(50, 'Processing slides...');
-            await this.delay(1000);
-            
-            this.showProgress(70, 'Converting to PDF format...');
-            await this.delay(1000);
-            
-            this.showProgress(90, 'Finalizing document...');
-            await this.delay(1000);
-            
-            // Create a simple PDF with conversion instructions
-            await this.createInstructionPDF(file);
-            
-            this.showProgress(100, 'Conversion complete!');
-            this.displayResults();
-            
-        } catch (error) {
-            throw new Error('PPTX conversion failed: ' + error.message);
-        }
-    }
-
-    async createInstructionPDF(file) {
-        try {
-            // Create a simple PDF with instructions using jsPDF
-            if (typeof window.jsPDF !== 'undefined') {
-                const { jsPDF } = window.jsPDF;
-                const doc = new jsPDF();
-                
-                doc.setFontSize(20);
-                doc.text('PPTX to PDF Conversion', 20, 30);
-                
-                doc.setFontSize(12);
-                doc.text('File: ' + file.name, 20, 50);
-                doc.text('Size: ' + this.formatFileSize(file.size), 20, 60);
-                doc.text('Uploaded: ' + new Date().toLocaleString(), 20, 70);
-                
-                doc.text('Instructions:', 20, 90);
-                doc.text('1. Use Microsoft PowerPoint to open your PPTX file', 20, 100);
-                doc.text('2. Go to File > Export > Create PDF/XPS', 20, 110);
-                doc.text('3. Choose your settings and save as PDF', 20, 120);
-                
-                doc.text('Alternative Online Services:', 20, 140);
-                doc.text('• SmallPDF.com', 20, 150);
-                doc.text('• ILovePDF.com', 20, 160);
-                doc.text('• Convertio.co', 20, 170);
-                
-                const pdfBlob = doc.output('blob');
-                const url = URL.createObjectURL(pdfBlob);
-                
-                this.downloadLink.href = url;
-                this.downloadLink.style.display = 'inline-block';
-                this.downloadLink.classList.remove('download-hidden');
-                this.downloadLink.download = `conversion-instructions-${new Date().toISOString().split('T')[0]}.pdf`;
-                
-                // Remove any existing click listeners and add new one
-                this.downloadLink.replaceWith(this.downloadLink.cloneNode(true));
-                this.downloadLink = document.getElementById('downloadLink');
-                this.downloadLink.addEventListener('click', () => {
-                    setTimeout(() => URL.revokeObjectURL(url), 1000);
-                });
-            } else {
-                // Fallback if jsPDF is not available
-                this.displayAlternativeSolution();
+            if (!window.JSZip || !window.jspdf || !window.jspdf.jsPDF) {
+                throw new Error("Required libraries (JSZip or jsPDF) failed to load.");
             }
+
+            this.showProgress(20, 'Extracting presentation data...');
+
+            const zip = new JSZip();
+            const contents = await zip.loadAsync(file);
+
+            // Find all slide XML files
+            const slideFiles = Object.keys(contents.files)
+                .filter(name => name.startsWith('ppt/slides/slide') && name.endsWith('.xml'))
+                .sort((a, b) => {
+                    const numA = parseInt(a.match(/slide(\d+)\.xml/)[1]);
+                    const numB = parseInt(b.match(/slide(\d+)\.xml/)[1]);
+                    return numA - numB;
+                });
+
+            if (slideFiles.length === 0) {
+                throw new Error("No slides found in this presentation.");
+            }
+
+            this.showProgress(40, `Found ${slideFiles.length} slides. Processing text...`);
+
+            const doc = new window.jspdf.jsPDF({
+                orientation: 'landscape',
+                unit: 'pt',
+                format: [960, 540] // typical 16:9 slide size
+            });
+
+            for (let i = 0; i < slideFiles.length; i++) {
+                this.showProgress(40 + (i / slideFiles.length) * 40, `Rendering slide ${i + 1} of ${slideFiles.length}...`);
+
+                if (i > 0) doc.addPage();
+
+                const slideXmlStr = await contents.files[slideFiles[i]].async("string");
+                const parser = new DOMParser();
+                const slideDoc = parser.parseFromString(slideXmlStr, "text/xml");
+
+                // Extract text tags <a:t>
+                const textNodes = slideDoc.getElementsByTagName("a:t");
+
+                let currentY = 50;
+                doc.setFontSize(16);
+                doc.setTextColor(50, 50, 50);
+
+                doc.text(`Slide ${i + 1}`, 20, 30);
+
+                let slideTextContent = [];
+                for (let j = 0; j < textNodes.length; j++) {
+                    const text = textNodes[j].textContent.trim();
+                    if (text) {
+                        slideTextContent.push(text);
+                    }
+                }
+
+                // Print collected text onto JS PDF (basic top-down layout)
+                doc.setFontSize(22);
+                doc.setTextColor(20, 20, 20);
+
+                let yPos = 80;
+                slideTextContent.forEach((txt) => {
+                    // Split text if it's too long
+                    const lines = doc.splitTextToSize(txt, 900);
+                    doc.text(lines, 30, yPos);
+                    yPos += (lines.length * 30) + 10;
+                    if (yPos > 500) {
+                        return; // avoid running off slide
+                    }
+                });
+            }
+
+            this.showProgress(90, 'Finalizing document layout...');
+
+            const pdfBlob = doc.output('blob');
+            const url = URL.createObjectURL(pdfBlob);
+
+            this.downloadLink.href = url;
+            this.downloadLink.style.display = 'inline-block';
+            this.downloadLink.classList.remove('download-hidden');
+            this.downloadLink.download = `presentation-${new Date().toISOString().split('T')[0]}.pdf`;
+
+            // Clean up old listeners
+            const oldLink = this.downloadLink;
+            const newLink = oldLink.cloneNode(true);
+            oldLink.replaceWith(newLink);
+            this.downloadLink = document.getElementById('downloadLink');
+
+            this.downloadLink.addEventListener('click', () => {
+                setTimeout(() => URL.revokeObjectURL(url), 1000);
+            });
+
+            this.showProgress(100, 'Conversion complete!');
+            this.displayResults(slideFiles.length);
+
         } catch (error) {
-            console.error('PDF creation failed:', error);
-            this.displayAlternativeSolution();
+            throw new Error('PPTX extraction failed: ' + error.message);
         }
     }
 
-    displayResults() {
+    displayResults(slideCount) {
         this.hideProgress();
         this.setLoadingState(false);
-        
+
         this.pdfOutput.innerHTML = `
             <div class="text-center">
                 <i class="fas fa-check-circle text-success" style="font-size: 3rem; margin-bottom: 1rem;"></i>
-                <h3>Conversion Instructions Generated!</h3>
-                <p>We've created a PDF with detailed instructions for converting your PPTX file to PDF format.</p>
+                <h3>Successfully Converted!</h3>
+                <p>We've created a PDF document containing the text content from ${slideCount} slides.</p>
                 <div class="mt-4">
                     <small class="text-muted">
-                        Click the download button below to get your instruction guide.
+                        Click the download button below to get your PDF.
                     </small>
                 </div>
             </div>
         `;
-        
-        // Ensure download button is visible
+
         this.downloadLink.style.display = 'inline-block';
         this.downloadLink.classList.remove('download-hidden');
-        
-        this.showSuccess('Conversion instructions generated successfully!');
-    }
-
-    displayAlternativeSolution() {
-        this.hideProgress();
-        this.setLoadingState(false);
-        
-        this.pdfOutput.innerHTML = `
-            <div class="text-center">
-                <i class="fas fa-info-circle text-info" style="font-size: 3rem; margin-bottom: 1rem;"></i>
-                <h3>PPTX to PDF Conversion</h3>
-                <p>Direct PPTX to PDF conversion requires server-side processing. Here are your options:</p>
-                
-                <div class="mt-4">
-                    <div class="card" style="margin: 1rem 0; text-align: left;">
-                        <h4><i class="fas fa-cloud" aria-hidden="true"></i> Online Services</h4>
-                        <p>Use online conversion services like:</p>
-                        <ul style="text-align: left; margin-left: 1rem;">
-                            <li><a href="https://smallpdf.com/ppt-to-pdf" target="_blank" rel="noopener">SmallPDF</a></li>
-                            <li><a href="https://www.ilovepdf.com/powerpoint_to_pdf" target="_blank" rel="noopener">ILovePDF</a></li>
-                            <li><a href="https://convertio.co/ppt-pdf/" target="_blank" rel="noopener">Convertio</a></li>
-                        </ul>
-                    </div>
-                    
-                    <div class="card" style="margin: 1rem 0; text-align: left;">
-                        <h4><i class="fas fa-desktop" aria-hidden="true"></i> Desktop Software</h4>
-                        <p>Use Microsoft PowerPoint or LibreOffice Impress to export as PDF.</p>
-                    </div>
-                    
-                    <div class="card" style="margin: 1rem 0; text-align: left;">
-                        <h4><i class="fas fa-code" aria-hidden="true"></i> For Developers</h4>
-                        <p>Integrate with services like CloudConvert API or use server-side libraries.</p>
-                    </div>
-                </div>
-                
-                <div class="mt-4">
-                    <button class="btn btn-secondary" onclick="window.open('https://smallpdf.com/ppt-to-pdf', '_blank')">
-                        <i class="fas fa-external-link-alt" aria-hidden="true"></i>
-                        Try SmallPDF
-                    </button>
-                </div>
-            </div>
-        `;
-        
-        this.showInfo('PPTX to PDF conversion requires external services. See options above.');
+        this.showSuccess('PPTX converted to PDF successfully!');
     }
 
     delay(ms) {
@@ -258,7 +223,7 @@ class PptxToPdfConverter {
     setLoadingState(loading) {
         this.convertButton.disabled = loading;
         this.pptxUpload.disabled = loading;
-        
+
         if (loading) {
             this.convertButton.innerHTML = '<i class="fas fa-spinner fa-spin" aria-hidden="true"></i> Processing...';
             this.convertButton.classList.add('loading');
@@ -293,12 +258,12 @@ class PptxToPdfConverter {
         this.hideProgress();
         this.setLoadingState(false);
         this.showError(`Error: ${error.message}`);
-        
+
         this.pdfOutput.innerHTML = `
             <div class="text-center">
                 <i class="fas fa-exclamation-circle text-error" style="font-size: 3rem; margin-bottom: 1rem;"></i>
                 <h3>Conversion Failed</h3>
-                <p>An error occurred during the conversion process. Please try again or use an alternative method.</p>
+                <p>An error occurred during the conversion process. Please verify the file is a valid PPTX and try again.</p>
             </div>
         `;
     }
@@ -316,9 +281,3 @@ class PptxToPdfConverter {
 document.addEventListener('DOMContentLoaded', () => {
     new PptxToPdfConverter();
 });
-
-// Legacy function for backward compatibility
-async function convertPptxToPdf() {
-    // This function is kept for backward compatibility
-    console.warn('convertPptxToPdf() is deprecated. Use the PptxToPdfConverter class instead.');
-}

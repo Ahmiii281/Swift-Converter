@@ -1,87 +1,103 @@
-// QR Generator wiring using qrcodejs (https://davidshimjs.github.io/qrcodejs/)
+// QR Generator using qr-code-styling (https://github.com/kozakdenys/qr-code-styling)
 (function () {
   const input = document.getElementById('qr-input');
   const sizeInput = document.getElementById('qr-size');
   const sizeLabel = document.getElementById('qr-size-label');
+  const colorInput = document.getElementById('qr-color');
+  const dotsInput = document.getElementById('qr-dots');
   const generateBtn = document.getElementById('generateBtn');
   const downloadBtn = document.getElementById('downloadBtn');
-  const clearBtn = document.getElementById('clearBtn');
   const qrcodeContainer = document.getElementById('qrcode');
-  let qr;
+
+  let qrCode = null;
 
   function updateSizeLabel() {
     sizeLabel.textContent = sizeInput.value;
   }
 
-  function clearQRCode() {
+  function initQR() {
+    const size = parseInt(sizeInput.value, 10) || 300;
+    const text = (input.value || '').trim() || 'https://swift-converter.com';
+    const color = colorInput.value || '#000000';
+    const dotType = dotsInput.value || 'square';
+
+    // Clear the container
     qrcodeContainer.innerHTML = '';
-    downloadBtn.disabled = true;
+
+    // Initialize qr-code-styling
+    qrCode = new QRCodeStyling({
+      width: size,
+      height: size,
+      data: text,
+      margin: 10,
+      qrOptions: {
+        typeNumber: 0,
+        mode: "Byte",
+        errorCorrectionLevel: "H"
+      },
+      imageOptions: {
+        hideBackgroundDots: true,
+        imageSize: 0.4,
+        margin: 5
+      },
+      dotsOptions: {
+        type: dotType,
+        color: color
+      },
+      backgroundOptions: {
+        color: "#ffffff"
+      },
+      cornersSquareOptions: {
+        type: dotType === "dots" || dotType === "rounded" || dotType === "extra-rounded" ? "extra-rounded" : "square",
+        color: color
+      },
+      cornersDotOptions: {
+        type: dotType === "dots" ? "dot" : "square",
+        color: color
+      }
+    });
+
+    qrCode.append(qrcodeContainer);
+    downloadBtn.disabled = false;
   }
 
   function generate() {
     const text = (input.value || '').trim();
     if (!text) {
       alert('Please enter text or a URL to generate a QR code.');
+      input.focus();
       return;
     }
-
-    clearQRCode();
-    const size = parseInt(sizeInput.value, 10) || 256;
-
-    // Create QRCode (qrcodejs creates an <img> or a table inside the container)
-    qr = new QRCode(qrcodeContainer, {
-      text: text,
-      width: size,
-      height: size,
-      colorDark: '#000000',
-      colorLight: '#ffffff',
-      correctLevel: QRCode.CorrectLevel.H
-    });
-
-    // If the library hasn't created an <img> yet (some browsers), wait a tick
-    setTimeout(() => {
-      const img = qrcodeContainer.querySelector('img');
-      const canvas = qrcodeContainer.querySelector('canvas');
-      if (img || canvas) {
-        downloadBtn.disabled = false;
-      }
-    }, 100);
+    initQR();
   }
 
   function downloadPNG() {
-    const img = qrcodeContainer.querySelector('img');
-    const canvas = qrcodeContainer.querySelector('canvas');
-    let dataUrl;
-
-    if (img && img.src) {
-      dataUrl = img.src;
-    } else if (canvas) {
-      dataUrl = canvas.toDataURL('image/png');
-    }
-
-    if (!dataUrl) {
-      alert('No QR code available to download. Please generate one first.');
-      return;
-    }
-
-    // Create a link to trigger download
-    const a = document.createElement('a');
-    a.href = dataUrl;
-    a.download = 'swift-converter-qr.png';
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
+    if (!qrCode) return;
+    qrCode.download({ name: "swift-converter-qr", extension: "png" });
   }
 
   // Event listeners
   if (sizeInput) {
     sizeInput.addEventListener('input', updateSizeLabel);
-    updateSizeLabel();
   }
+
   if (generateBtn) generateBtn.addEventListener('click', generate);
   if (downloadBtn) downloadBtn.addEventListener('click', downloadPNG);
-  if (clearBtn) clearBtn.addEventListener('click', () => {
-    input.value = '';
-    clearQRCode();
+
+  // Real-time update on options change
+  [sizeInput, colorInput, dotsInput].forEach(el => {
+    if (el) {
+      el.addEventListener('change', () => {
+        if (input.value.trim()) {
+          generate();
+        } else {
+          initQR(); // default qr
+        }
+      });
+    }
   });
+
+  // Init with default placeholder
+  updateSizeLabel();
+  initQR();
 })();

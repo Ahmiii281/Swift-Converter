@@ -35,8 +35,8 @@ class PdfToWordConverter {
     async initializePdfJs() {
         try {
             // Configure PDF.js worker
-            if (typeof pdfjsLib !== 'undefined') {
-                pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+            if (window.pdfjsLib) {
+                window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
             }
         } catch (error) {
             console.error('Failed to initialize PDF.js:', error);
@@ -46,7 +46,7 @@ class PdfToWordConverter {
     validateFile(file) {
         const maxSize = 25 * 1024 * 1024; // 25MB
         const allowedTypes = ['application/pdf'];
-        
+
         if (!allowedTypes.includes(file.type)) {
             this.showError('Please select a valid PDF file.');
             this.resetForm();
@@ -74,7 +74,7 @@ class PdfToWordConverter {
 
     async convertPdfToWord() {
         const pdfFile = this.pdfUpload.files[0];
-        
+
         if (!pdfFile) {
             this.showError('Please select a PDF file first.');
             return;
@@ -83,7 +83,7 @@ class PdfToWordConverter {
         try {
             this.setLoadingState(true);
             this.showProgress(0, 'Reading PDF file...');
-            
+
             const reader = new FileReader();
             reader.onload = async (e) => {
                 try {
@@ -92,13 +92,13 @@ class PdfToWordConverter {
                     this.handleError(error);
                 }
             };
-            
+
             reader.onerror = () => {
                 this.handleError(new Error('Failed to read the PDF file.'));
             };
-            
+
             reader.readAsArrayBuffer(pdfFile);
-            
+
         } catch (error) {
             this.handleError(error);
         }
@@ -107,55 +107,69 @@ class PdfToWordConverter {
     async processPdf(arrayBuffer) {
         try {
             this.showProgress(10, 'Loading PDF...');
-            
+
             const typedArray = new Uint8Array(arrayBuffer);
-            const pdf = await pdfjsLib.getDocument(typedArray).promise;
-            
+            const pdf = await window.pdfjsLib.getDocument(typedArray).promise;
+
             this.showProgress(20, `Processing ${pdf.numPages} pages...`);
-            
+
             let allText = '';
             const totalPages = pdf.numPages;
-            
+
             for (let i = 1; i <= totalPages; i++) {
                 const progress = 20 + (i / totalPages) * 60;
                 this.showProgress(progress, `Extracting text from page ${i} of ${totalPages}...`);
-                
+
                 const page = await pdf.getPage(i);
                 const textContent = await page.getTextContent();
-                
+
                 let pageText = this.extractTextFromPage(textContent);
                 allText += pageText + "\n\n";
             }
-            
+
             this.extractedText = allText.trim();
             this.showProgress(90, 'Generating Word document...');
-            
+
             await this.generateWordDocument();
-            
+
             this.showProgress(100, 'Conversion complete!');
             this.displayResults();
-            
+
         } catch (error) {
             throw new Error('PDF processing failed: ' + error.message);
         }
     }
 
     extractTextFromPage(textContent) {
-        let previousY = null;
         let pageText = '';
-        
-        textContent.items.forEach((item) => {
-            const currentY = item.transform[5];
-            
-            // Add line break if Y position changes significantly
-            if (previousY !== null && Math.abs(currentY - previousY) > 10) {
-                pageText += '\n';
+
+        // Sort items by Y (top-to-bottom, PDF Y coordinate is bottom-to-top usually so we sort descending)
+        // and then X (left-to-right)
+        const items = textContent.items.slice().sort((a, b) => {
+            // Give a small tolerance for Y to group items on same line
+            const yA = Math.round(a.transform[5] / 5) * 5;
+            const yB = Math.round(b.transform[5] / 5) * 5;
+            if (yA !== yB) {
+                return yB - yA; // descending for Y
             }
-            
+            return a.transform[4] - b.transform[4]; // ascending for X
+        });
+
+        let previousY = null;
+
+        items.forEach((item) => {
+            const currentY = Math.round(item.transform[5] / 5) * 5;
+
+            if (previousY !== null && previousY !== currentY) {
+                pageText += '\n';
+            } else if (previousY !== null && previousY === currentY) {
+                pageText += ' '; // space between items on same line
+            }
+
             pageText += item.str;
             previousY = currentY;
         });
-        
+
         return pageText;
     }
 
@@ -167,11 +181,11 @@ class PdfToWordConverter {
 
             // Split text into paragraphs
             const paragraphs = this.extractedText.split('\n\n').filter(p => p.trim());
-            
+
             const doc = new docx.Document({
                 sections: [{
                     properties: {},
-                    children: paragraphs.map(text => 
+                    children: paragraphs.map(text =>
                         new docx.Paragraph({
                             children: [new docx.TextRun({
                                 text: text.trim(),
@@ -186,18 +200,18 @@ class PdfToWordConverter {
             });
 
             const blob = await docx.Packer.toBlob(doc);
-            
+
             // Create download link
             const url = URL.createObjectURL(blob);
             this.downloadLink.href = url;
             this.downloadLink.style.display = 'inline-block';
             this.downloadLink.download = `converted-${new Date().toISOString().split('T')[0]}.docx`;
-            
+
             // Clean up URL after download
             this.downloadLink.addEventListener('click', () => {
                 setTimeout(() => URL.revokeObjectURL(url), 1000);
             });
-            
+
         } catch (error) {
             throw new Error('Word document generation failed: ' + error.message);
         }
@@ -206,7 +220,7 @@ class PdfToWordConverter {
     displayResults() {
         this.hideProgress();
         this.setLoadingState(false);
-        
+
         if (this.extractedText) {
             this.outputArea.innerHTML = `
                 <div class="text-center">
@@ -247,7 +261,7 @@ class PdfToWordConverter {
     setLoadingState(loading) {
         this.convertButton.disabled = loading;
         this.pdfUpload.disabled = loading;
-        
+
         if (loading) {
             this.convertButton.innerHTML = '<i class="fas fa-spinner fa-spin" aria-hidden="true"></i> Processing...';
             this.convertButton.classList.add('loading');
@@ -277,7 +291,7 @@ class PdfToWordConverter {
         this.hideProgress();
         this.setLoadingState(false);
         this.showError(`Error: ${error.message}`);
-        
+
         this.outputArea.innerHTML = `
             <div class="text-center">
                 <i class="fas fa-exclamation-circle text-error" style="font-size: 3rem; margin-bottom: 1rem;"></i>

@@ -37,7 +37,7 @@ class ImageToTextConverter {
     validateFile(file) {
         const maxSize = 10 * 1024 * 1024; // 10MB
         const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/bmp', 'image/tiff'];
-        
+
         if (!allowedTypes.includes(file.type)) {
             this.showError('Please select a valid image file (JPG, PNG, GIF, BMP, TIFF).');
             this.resetForm();
@@ -65,7 +65,7 @@ class ImageToTextConverter {
 
     async convertImage() {
         const imageFile = this.imageUpload.files[0];
-        
+
         if (!imageFile) {
             this.showError('Please select an image file first.');
             return;
@@ -74,25 +74,61 @@ class ImageToTextConverter {
         try {
             this.setLoadingState(true);
             this.showProgress(0, 'Initializing OCR engine...');
-            
+
             const reader = new FileReader();
             reader.onload = async (e) => {
                 try {
-                    await this.performOCR(e.target.result);
+                    this.showProgress(5, 'Optimizing image for OCR...');
+                    const processedImgUrl = await this.preprocessImage(e.target.result);
+                    await this.performOCR(processedImgUrl);
                 } catch (error) {
                     this.handleError(error);
                 }
             };
-            
+
             reader.onerror = () => {
                 this.handleError(new Error('Failed to read the image file.'));
             };
-            
+
             reader.readAsDataURL(imageFile);
-            
+
         } catch (error) {
             this.handleError(error);
         }
+    }
+
+    async preprocessImage(imageDataUrl) {
+        return new Promise((resolve) => {
+            const img = new Image();
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                canvas.width = img.width;
+                canvas.height = img.height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0);
+
+                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                const data = imageData.data;
+
+                // Enhance Contrast & Convert to Grayscale
+                const contrast = 60; // enhance contrast
+                const factor = (259 * (contrast + 255)) / (255 * (259 - contrast));
+
+                for (let i = 0; i < data.length; i += 4) {
+                    const r = data[i], g = data[i + 1], b = data[i + 2];
+                    let gray = 0.299 * r + 0.587 * g + 0.114 * b;
+                    gray = factor * (gray - 128) + 128;
+
+                    // Clamp
+                    gray = Math.max(0, Math.min(255, gray));
+                    data[i] = data[i + 1] = data[i + 2] = gray;
+                }
+
+                ctx.putImageData(imageData, 0, 0);
+                resolve(canvas.toDataURL('image/png'));
+            };
+            img.src = imageDataUrl;
+        });
     }
 
     async performOCR(imageDataUrl) {
@@ -112,15 +148,13 @@ class ImageToTextConverter {
                         } else if (progress.status === 'loading language traineddata') {
                             this.showProgress(30, 'Loading language data...');
                         }
-                    },
-                    workerPath: 'https://cdn.jsdelivr.net/npm/tesseract.js@5.0.2/dist/worker.min.js',
-                    langPath: 'https://cdn.jsdelivr.net/npm/tesseract.js-data@5.0.0/',
+                    }
                 }
             );
 
             this.extractedText = text.trim();
             this.displayResults();
-            
+
         } catch (error) {
             throw new Error('OCR processing failed: ' + error.message);
         }
@@ -129,7 +163,7 @@ class ImageToTextConverter {
     displayResults() {
         this.hideProgress();
         this.setLoadingState(false);
-        
+
         if (this.extractedText) {
             this.outputElement.innerHTML = `<pre>${this.escapeHtml(this.extractedText)}</pre>`;
             this.showSuccess('Text extraction completed successfully!');
@@ -156,13 +190,13 @@ class ImageToTextConverter {
         try {
             await navigator.clipboard.writeText(this.extractedText);
             this.showSuccess('Text copied to clipboard!');
-            
+
             // Visual feedback
             this.copyButton.innerHTML = '<i class="fas fa-check" aria-hidden="true"></i> Copied!';
             setTimeout(() => {
                 this.copyButton.innerHTML = '<i class="fas fa-copy" aria-hidden="true"></i> Copy Text';
             }, 2000);
-            
+
         } catch (error) {
             // Fallback for older browsers
             this.fallbackCopyToClipboard();
@@ -178,14 +212,14 @@ class ImageToTextConverter {
         document.body.appendChild(textArea);
         textArea.focus();
         textArea.select();
-        
+
         try {
             document.execCommand('copy');
             this.showSuccess('Text copied to clipboard!');
         } catch (error) {
             this.showError('Failed to copy text. Please try again.');
         }
-        
+
         document.body.removeChild(textArea);
     }
 
@@ -204,7 +238,7 @@ class ImageToTextConverter {
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
-        
+
         this.showSuccess('Text file downloaded successfully!');
     }
 
@@ -222,7 +256,7 @@ class ImageToTextConverter {
     setLoadingState(loading) {
         this.convertButton.disabled = loading;
         this.imageUpload.disabled = loading;
-        
+
         if (loading) {
             this.convertButton.innerHTML = '<i class="fas fa-spinner fa-spin" aria-hidden="true"></i> Processing...';
             this.convertButton.classList.add('loading');
