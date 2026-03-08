@@ -1,9 +1,9 @@
 {
   "name": "Swift Converter - Fast File Conversions",
   "short_name": "Swift Converter",
-  "description": "Convert files quickly and securely. Support for Image to Text, PDF to Word, and PPTX to PDF conversions.",
-  "version": "2.0.0",
-  "start_url": "/index.html",
+  "description": "Convert files quickly and securely. Support for Image to Text, PDF to Word, PPTX to PDF, QR Generator, and URL Shortener.",
+  "version": "2.1.0",
+  "start_url": "/",
   "display": "standalone",
   "orientation": "portrait-primary",
   "theme_color": "#2563eb",
@@ -11,71 +11,17 @@
   "scope": "/",
   "lang": "en",
   "dir": "ltr",
-  "categories": ["productivity", "utilities", "business"],
+  "categories": [
+    "productivity",
+    "utilities",
+    "business"
+  ],
   "icons": [
     {
-      "src": "/images/icon-72x72.png",
-      "sizes": "72x72",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "/images/icon-96x96.png",
-      "sizes": "96x96",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "/images/icon-128x128.png",
-      "sizes": "128x128",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "/images/icon-144x144.png",
-      "sizes": "144x144",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "/images/icon-152x152.png",
-      "sizes": "152x152",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "/images/icon-192x192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "/images/icon-384x384.png",
-      "sizes": "384x384",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "/images/icon-512x512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
-    }
-  ],
-  "screenshots": [
-    {
-      "src": "/images/screenshot-desktop.png",
-      "sizes": "1280x720",
-      "type": "image/png",
-      "form_factor": "wide",
-      "label": "Swift Converter Desktop View"
-    },
-    {
-      "src": "/images/screenshot-mobile.png",
-      "sizes": "390x844",
-      "type": "image/png",
-      "form_factor": "narrow",
-      "label": "Swift Converter Mobile View"
+      "src": "/images/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
     }
   ],
   "shortcuts": [
@@ -83,56 +29,35 @@
       "name": "Image to Text",
       "short_name": "OCR",
       "description": "Extract text from images",
-      "url": "/imagetotext.html",
-      "icons": [
-        {
-          "src": "/images/shortcut-image.png",
-          "sizes": "96x96"
-        }
-      ]
+      "url": "/imagetotext.html"
     },
     {
       "name": "PDF to Word",
-      "short_name": "PDF→Word",
+      "short_name": "PDF\u2192Word",
       "description": "Convert PDF to Word document",
-      "url": "/pdftoword.html",
-      "icons": [
-        {
-          "src": "/images/shortcut-pdf.png",
-          "sizes": "96x96"
-        }
-      ]
+      "url": "/pdftoword.html"
     },
     {
       "name": "PPTX to PDF",
-      "short_name": "PPTX→PDF",
+      "short_name": "PPTX\u2192PDF",
       "description": "Convert PowerPoint to PDF",
-      "url": "/pptxtopdf.html",
-      "icons": [
-        {
-          "src": "/images/shortcut-pptx.png",
-          "sizes": "96x96"
-        }
-      ]
+      "url": "/pptxtopdf.html"
+    },
+    {
+      "name": "QR Generator",
+      "short_name": "QR Code",
+      "description": "Generate QR codes",
+      "url": "/qrgenerator.html"
     },
     {
       "name": "URL Shortener",
       "short_name": "Shorten URL",
       "description": "Create short, manageable links",
-      "url": "/urlshortener.html",
-      "icons": [
-        {
-          "src": "/images/shortcut-link.png",
-          "sizes": "96x96"
-        }
-      ]
+      "url": "/urlshortener.html"
     }
   ],
   "related_applications": [],
   "prefer_related_applications": false,
-  "edge_side_panel": {
-    "preferred_width": 400
-  },
   "launch_handler": {
     "client_mode": "navigate-existing"
   }
