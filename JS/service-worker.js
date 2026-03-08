@@ -10,27 +10,31 @@ const STATIC_ASSETS = [
     '/imagetotext.html',
     '/pdftoword.html',
     '/pptxtopdf.html',
+    '/qrgenerator.html',
+    '/urlshortener.html',
     '/style.css',
     '/JS/theme.js',
     '/JS/imagetotext.js',
     '/JS/pdftoword.js',
     '/JS/pptxtopdf.js',
-    '/urlshortener.html',
+    '/JS/qr-generator.js',
     '/JS/urlshortener.js',
+    '/JS/nav.js',
     '/manifest.json',
     // External CDN resources
     'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css',
     'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css',
     'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap',
-    'https://cdn.jsdelivr.net/npm/tesseract.js@5.0.2/dist/tesseract.min.js',
-    'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js',
+    'https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/4.1.1/tesseract.min.js',
+    'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js',
     'https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.min.js'
 ];
+
 
 // Install event - cache static assets
 self.addEventListener('install', (event) => {
     console.log('Service Worker: Installing...');
-    
+
     event.waitUntil(
         Promise.all([
             caches.open(STATIC_CACHE_NAME).then((cache) => {
@@ -45,13 +49,13 @@ self.addEventListener('install', (event) => {
 // Activate event - clean up old caches
 self.addEventListener('activate', (event) => {
     console.log('Service Worker: Activating...');
-    
+
     event.waitUntil(
         Promise.all([
             caches.keys().then((cacheNames) => {
                 return Promise.all(
                     cacheNames.map((cacheName) => {
-                        if (cacheName !== STATIC_CACHE_NAME && 
+                        if (cacheName !== STATIC_CACHE_NAME &&
                             cacheName !== DYNAMIC_CACHE_NAME &&
                             cacheName.startsWith('swift-converter-')) {
                             console.log('Service Worker: Deleting old cache:', cacheName);
@@ -69,17 +73,17 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
     const { request } = event;
     const url = new URL(request.url);
-    
+
     // Skip non-GET requests
     if (request.method !== 'GET') {
         return;
     }
-    
+
     // Skip chrome-extension and other non-http requests
     if (!url.protocol.startsWith('http')) {
         return;
     }
-    
+
     event.respondWith(
         handleRequest(request)
     );
@@ -87,50 +91,50 @@ self.addEventListener('fetch', (event) => {
 
 async function handleRequest(request) {
     const url = new URL(request.url);
-    
+
     try {
         // Try network first for API calls and dynamic content
         if (isApiRequest(url) || isDynamicContent(url)) {
             return await networkFirst(request);
         }
-        
+
         // Try cache first for static assets
         return await cacheFirst(request);
-        
+
     } catch (error) {
         console.log('Service Worker: Request failed:', error);
-        
+
         // Return offline page for navigation requests
         if (request.mode === 'navigate') {
             return await getOfflinePage();
         }
-        
+
         // Return cached version if available
         const cachedResponse = await caches.match(request);
         if (cachedResponse) {
             return cachedResponse;
         }
-        
+
         throw error;
     }
 }
 
 async function cacheFirst(request) {
     const cachedResponse = await caches.match(request);
-    
+
     if (cachedResponse) {
         return cachedResponse;
     }
-    
+
     try {
         const networkResponse = await fetch(request);
-        
+
         // Cache successful responses
         if (networkResponse.ok) {
             const cache = await caches.open(STATIC_CACHE_NAME);
             cache.put(request, networkResponse.clone());
         }
-        
+
         return networkResponse;
     } catch (error) {
         throw error;
@@ -140,13 +144,13 @@ async function cacheFirst(request) {
 async function networkFirst(request) {
     try {
         const networkResponse = await fetch(request);
-        
+
         // Cache successful responses
         if (networkResponse.ok) {
             const cache = await caches.open(DYNAMIC_CACHE_NAME);
             cache.put(request, networkResponse.clone());
         }
-        
+
         return networkResponse;
     } catch (error) {
         // Fall back to cache
@@ -159,25 +163,25 @@ async function networkFirst(request) {
 }
 
 function isApiRequest(url) {
-    return url.pathname.startsWith('/api/') || 
-           url.hostname.includes('api') ||
-           url.searchParams.has('api');
+    return url.pathname.startsWith('/api/') ||
+        url.hostname.includes('api') ||
+        url.searchParams.has('api');
 }
 
 function isDynamicContent(url) {
     return url.pathname.includes('convert') ||
-           url.pathname.includes('upload') ||
-           url.pathname.includes('download');
+        url.pathname.includes('upload') ||
+        url.pathname.includes('download');
 }
 
 async function getOfflinePage() {
     const cache = await caches.open(STATIC_CACHE_NAME);
     const offlinePage = await cache.match('/index.html');
-    
+
     if (offlinePage) {
         return offlinePage;
     }
-    
+
     // Return a basic offline response
     return new Response(
         `
@@ -290,7 +294,7 @@ self.addEventListener('push', (event) => {
                 }
             ]
         };
-        
+
         event.waitUntil(
             self.registration.showNotification(data.title, options)
         );
@@ -300,7 +304,7 @@ self.addEventListener('push', (event) => {
 // Handle notification clicks
 self.addEventListener('notificationclick', (event) => {
     event.notification.close();
-    
+
     if (event.action === 'explore') {
         event.waitUntil(
             clients.openWindow('/')
@@ -313,7 +317,7 @@ self.addEventListener('message', (event) => {
     if (event.data && event.data.type === 'SKIP_WAITING') {
         self.skipWaiting();
     }
-    
+
     if (event.data && event.data.type === 'GET_VERSION') {
         event.ports[0].postMessage({ version: CACHE_NAME });
     }

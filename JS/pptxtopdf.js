@@ -17,7 +17,6 @@ class PptxToPdfConverter {
     }
 
     setupEventListeners() {
-        this.pptxUpload.addEventListener('change', (e) => this.handleFileSelection(e));
         this.convertButton.addEventListener('click', () => this.convertPptxToPdf());
     }
 

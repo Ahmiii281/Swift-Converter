@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Shorten long URLs instantly. Create compact, shareable links with Swift Converter's free URL Shortener.">
+    <meta name="keywords" content="URL shortener, link shortener, short URL, compact URL, TinyURL">
+
+    <!-- Preconnect to external domains for performance -->
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Icons and Manifest -->
+    <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+    <link rel="manifest" href="/manifest.json">
+
+    <!-- Theme Script - Load early to prevent flash -->
+    <script src="../JS/theme.js"></script>
+
+    <title>URL Shortener - Swift Converter</title>
+</head>
+
+<body>
+    <!-- Skip to main content for accessibility -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <!-- Header Section -->
+    <header class="navbar" role="banner">
+        <div class="navbar-container">
+            <a href="./index.html" class="logo" aria-label="Swift Converter - Home">
+                <i class="fas fa-bolt" aria-hidden="true"></i>
+                Swift Converter
+            </a>
+            <nav class="navbar-nav" role="navigation" aria-label="Main navigation">
+                <button class="nav-toggle" aria-expanded="false" aria-controls="primary-navigation"
+                    aria-label="Toggle navigation">
+                    <i class="fas fa-bars" aria-hidden="true"></i>
+                </button>
+                <ul id="primary-navigation" class="nav-list">
+                    <li><a href="./imagetotext.html" class="nav-link">Image to Text</a></li>
+                    <li><a href="./pdftoword.html" class="nav-link">PDF to Word</a></li>
+                    <li><a href="./pptxtopdf.html" class="nav-link">PPTX to PDF</a></li>
+                    <li><a href="./qrgenerator.html" class="nav-link">QR Generator</a></li>
+                    <li><a href="./urlshortener.html" class="nav-link" aria-current="page">URL Shortener</a></li>
+                </ul>
+            </nav>
+            <button id="themeToggle" class="theme-toggle" title="Toggle Theme" aria-label="Toggle dark mode">
+                <i id="themeIcon" class="bi bi-moon-fill" aria-hidden="true"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Section -->
+    <main id="main-content" role="main">
+        <div class="container">
+            <!-- Page Header -->
+            <section class="card mt-8">
+                <div class="card-header text-center">
+                    <h1 class="card-title">
+                        <i class="fas fa-link" aria-hidden="true"></i>
+                        URL Shortener
+                    </h1>
+                    <p class="card-description">
+                        Transform long, unwieldy URLs into short, shareable links instantly. Perfect for social media,
+                        emails, and anywhere character count matters.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Input Section -->
+            <section class="card" aria-labelledby="shortener-title">
+                <h2 id="shortener-title" class="card-title">Shorten Your URL</h2>
+
+                <div class="form-group">
+                    <label for="longUrlInput" class="form-label">Enter a long URL</label>
+                    <input type="url" id="longUrlInput" class="form-input"
+                        placeholder="https://example.com/very/long/url/that/needs/shortening"
+                        aria-describedby="url-help">
+                    <small id="url-help" class="text-muted">
+                        Must start with http:// or https://
+                    </small>
+                </div>
+
+                <button id="shortenUrlButton" class="btn btn-primary btn-lg">
+                    <i class="fas fa-cut" aria-hidden="true"></i>
+                    Shorten URL
+                </button>
+
+                <div id="statusMessage" class="mt-4" aria-live="polite" aria-atomic="true"></div>
+            </section>
+
+            <!-- Output Section -->
+            <section class="card" aria-labelledby="output-title">
+                <h2 id="output-title" class="card-title">Your Short Link</h2>
+                <div id="outputArea" class="output-container" aria-label="Shortened URL result">
+                    <p class="text-center text-muted">Enter a URL above to generate a short link.</p>
+                </div>
+                <div class="mt-4" style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+                    <button id="copyButton" class="btn btn-secondary" disabled>
+                        <i class="fas fa-copy" aria-hidden="true"></i>
+                        Copy Short Link
+                    </button>
+                    <a id="testLink" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-secondary"
+                        style="display:none;" aria-label="Open short link in new tab">
+                        <i class="fas fa-external-link-alt" aria-hidden="true"></i>
+                        Test Link
+                    </a>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer Section -->
+    <footer class="footer" role="contentinfo">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Swift Converter</h3>
+                <p>Your trusted partner for fast and secure file conversions.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Tools</h4>
+                <ul>
+                    <li><a href="./imagetotext.html">Image to Text</a></li>
+                    <li><a href="./pdftoword.html">PDF to Word</a></li>
+                    <li><a href="./pptxtopdf.html">PPTX to PDF</a></li>
+                    <li><a href="./qrgenerator.html">QR Generator</a></li>
+                    <li><a href="./urlshortener.html">URL Shortener</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Legal</h4>
+                <ul>
+                    <li><a href="./Docs/privacy-policy.html">Privacy Policy</a></li>
+                    <li><a href="./Docs/terms-of-services.html">Terms of Service</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Swift Converter. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="../JS/urlshortener.js"></script>
+    <script src="../JS/nav.js"></script>
+</body>
+
+</html>

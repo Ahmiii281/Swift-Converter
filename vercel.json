@@ -1,6 +1,14 @@
 {
   "public": true,
   "rewrites": [
-    { "source": "/", "destination": "/public/index.html" }
+    { "source": "/",                   "destination": "/public/index.html" },
+    { "source": "/index.html",         "destination": "/public/index.html" },
+    { "source": "/imagetotext.html",   "destination": "/public/imagetotext.html" },
+    { "source": "/pdftoword.html",     "destination": "/public/pdftoword.html" },
+    { "source": "/pptxtopdf.html",     "destination": "/public/pptxtopdf.html" },
+    { "source": "/qrgenerator.html",   "destination": "/public/qrgenerator.html" },
+    { "source": "/urlshortener.html",  "destination": "/public/urlshortener.html" },
+    { "source": "/style.css",          "destination": "/public/style.css" },
+    { "source": "/manifest.json",      "destination": "/public/manifest.json" }
   ]
 }

@@ -19,7 +19,6 @@ class PdfToWordConverter {
     }
 
     setupEventListeners() {
-        this.pdfUpload.addEventListener('change', (e) => this.handleFileSelection(e));
         this.convertButton.addEventListener('click', () => this.convertPdfToWord());
     }
 

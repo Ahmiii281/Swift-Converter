@@ -19,7 +19,6 @@ class ImageToTextConverter {
     }
 
     setupEventListeners() {
-        this.imageUpload.addEventListener('change', (e) => this.handleFileSelection(e));
         this.convertButton.addEventListener('click', () => this.convertImage());
         this.copyButton.addEventListener('click', () => this.copyToClipboard());
         this.downloadButton.addEventListener('click', () => this.downloadText());
